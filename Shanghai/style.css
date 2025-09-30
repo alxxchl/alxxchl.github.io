@@ -1,0 +1,56 @@
+/*style.css */
+body {
+  background-image: url("shanghai_background.jpg");
+  background-size: cover;    
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+h1 {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 18vw;
+    line-height: 0%;
+    color: #F4F8E6;
+}
+h2{
+    font-family: sans-serif;
+    font-weight:  800;
+    font-size: 5vw;
+    line-height: 0%;
+    color: #F4F8E6;
+}
+h3{
+    font-family: sans-serif;
+    font-weight: 800;
+    font-size: 3vw;
+    line-height: 0%;
+    color: #F4F8E6;
+}
+p{
+    font-family: sans-serif;
+    font-weight:800;
+    line-height: 150%;
+    width:800px;
+    color: #F4F8E6;
+}
+#picture{
+    border-radius: 10%;
+}
+ul{
+    font-family: sans-serif;
+    font-weight:800;
+    line-height: 200%;
+    font-style: italic;
+    color: #F4F8E6;
+}
+
+span {
+    color: white;
+    font-family: sans-serif;
+    font-weight:800;
+    background-color: black;
+    padding: 20px;
+    border: 5px black;
+    border-radius: 30px;
+}
