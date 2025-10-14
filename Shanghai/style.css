@@ -13,7 +13,7 @@ h1 {
     font-weight: bold;
     font-size: 18vw;
     line-height: 0%;
-     text-align: center;
+    text-align: center;
     color: #F4F8E6;
 }
 h2{
@@ -42,7 +42,7 @@ h3{
   transform-origin: left top;
   position: relative;
   left: 200px;
-  top: 400px;
+  top: 300px;
 }
 .info{
     font-family: sans-serif;
@@ -51,7 +51,16 @@ h3{
     line-height: 0%;
     color: #F4F8E6;
       position: relative;
-      left: 1300px;
+      left: 1000px;
+}
+.go{
+    font-family: sans-serif;
+    font-weight: 800;
+    font-size: 5vw;
+    line-height: 0%;
+    color: #F4F8E6;
+      position: relative;
+      left: 200px
 }
 p{
     font-family: sans-serif;
@@ -69,7 +78,7 @@ p{
     color: #F4F8E6;
   position: relative;
   left: 250px;
-  top:-120px;
+  top:-50px;
 }
 .info-content{
  font-family: sans-serif;
@@ -79,10 +88,8 @@ p{
     width:900px;
     color: #F4F8E6;
   position: relative;
-  left: 1300px;
-}
-#picture{
-    border-radius: 10%;
+  left: 1000px;
+
 }
 ul{
     font-family: sans-serif;
@@ -93,8 +100,8 @@ ul{
 }
 
 .button-container {
-  text-align: center; /* 只让这个容器里的内容居中 */
-  margin-top: 40px;   /* 可选：往下留点空隙 */
+  text-align: center; 
+  margin-top: 40px; 
 }
 
 .back-home {
@@ -110,6 +117,32 @@ ul{
 }
 
 .back-home:hover {
-  background-color: #333; /* hover 效果 */
+  background-color: #333; 
   cursor: pointer;
+}
+
+.image-container {
+  position: relative; 
+  width: 80%;           
+  margin: 40px auto;   
+  border-radius: 30px;
+  overflow: hidden;        
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.image-container img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.caption {
+  position: absolute;
+  bottom: 20px;
+  left: 25px;
+  font-size: 5vw;
+  font-weight: 800;
+  font-family: sans-serif;
+  color: white;
+  text-shadow: 0 3px 8px rgba(0,0,0,0.6);
 }
