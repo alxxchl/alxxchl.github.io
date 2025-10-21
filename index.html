@@ -1,40 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Where to Next — Blocks</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="left">
+        <h1 class="title">
+          <span>WHERE</span>
+          <span>TO</span>
+          <span>NEXT</span>
+        </h1>
+        <div class="year" aria-hidden="true">2026</div>
+      </section>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Harmonic Collection</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
+      <nav class="right" aria-label="快速选择">
+        <a class="block"
+           style="--bg: var(--sunny); --img: url('https://picsum.photos/seed/sun/1200/800');"
+           href="#sunny">Somewhere Sunny</a>
 
-<body>
-    <h1>Welcome to my Harmonic Collection!</h1>
-    <ul>
-        <li>
-            <a href="Sapporo/index.html">SAPPORO</a>
-        </li>
-        <li>
-            <a href="Interlaken/index.html">INTERLAKEN</a>
-        </li>
-        <li>
-            <a href="Shanghai/index.html">SHANGHAI</a>
-        </li>
-        <li>
-            <a href="Chongqing/">CHONGQING</a>
-        </li>
-        <li>
-            <a href="LosAngeles/index.html">Los Angeles</a>
-        </li>
-        <li>
-            <a href="Zurich/">Zurich</a>
-        </li>
-        <li>
-            <a href="Osaka/">OSAKA</a>
-        </li>
-    </ul>  
+        <a class="block"
+           style="--bg: var(--urban); --img: url('https://picsum.photos/seed/city/1200/800');"
+           href="#urban">Somewhere Urban</a>
 
-    <img src="flower.jpg">
-</body>
+        <a class="block is-dark"
+           style="--bg: var(--romantic); --img: url('https://picsum.photos/seed/romance/1200/800');"
+           href="#romantic">Somewhere Romantic</a>
 
+        <a class="block is-dark"
+           style="--bg: var(--delicious); --img: url('https://picsum.photos/seed/food/1200/800');"
+           href="#delicious">Somewhere Delicious</a>
+
+        <a class="block is-dark"
+           style="--bg: var(--cool); --img: url('https://picsum.photos/seed/cool/1200/800');"
+           href="#cool">Somewhere Cool</a>
+      </nav>
+    </main>
+  </body>
 </html>

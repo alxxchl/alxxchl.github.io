@@ -1,3 +1,115 @@
-body {
-    background-color: lightblue;
+:root {
+  --paper: #e4e1db;  
+  --sunny: #efe85a;
+  --urban: #73c457;
+  --romantic: #2f80c7;
+  --delicious: #3a148a;
+  --cool: #000000;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+.layout {
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 58% 42%;
+}
+
+
+.left{
+  position: relative;
+  background: var(--paper);
+  padding: clamp(20px, 4.8vw, 64px)
+           clamp(20px, 4.8vw, 64px)
+           clamp(20px, 4.8vw, 64px)
+           calc(var(--year-col) + clamp(12px, 2vw, 24px));
+  display: block;
+  min-height: 100%;
+}
+
+.title{
+  margin: 0;
+  line-height: .9;
+  font-weight: 900;
+  font-size: clamp(48px, 8.2vw, 140px);
+  letter-spacing: -0.02em;
+  color: #000;
+}
+.title span{ display:block; }
+
+.year{
+  position: absolute;
+
+  bottom: clamp(20px, 4.8vw, 64px);
+  writing-mode: vertical-tb;
+  text-orientation: mixed;
+
+  font-weight: 900;
+  font-size: clamp(76px, 14vw, 200px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #000;
+}
+
+.right {
+  display: grid;
+  grid-auto-rows: 1fr;
+  min-height: 100svh;
+}
+
+.block {
+  position: relative;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  color: #000;
+  font-weight: 800;
+  letter-spacing: .02em;
+  user-select: none;
+  background: var(--bg, #ccc);
+  overflow: hidden;
+  transition: transform .25s ease, filter .25s ease;
+}
+
+.block::after {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: var(--img);
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity .28s ease;
+}
+
+.block:hover::after,
+.block:focus-visible::after { opacity: 1; }
+
+.block:hover { transform: translateY(-1px); filter: saturate(1.05); }
+
+.block.is-dark { color:#fff; }
+
+@media (max-width: 680px){
+  .layout{ grid-template-columns: 1fr; }
+
+  .left{
+    min-height: 36svh;
+    padding: clamp(20px, 8vw, 64px);
+  }
+
+  .title{ font-size: clamp(40px, 12vw, 120px); }
+
+  .year{
+    position: static;
+    transform: none;
+    font-size: clamp(40px, 14vw, 100px);
+    margin-top: .6em;
+  }
+
+  .right{ min-height: 64svh; }
 }
