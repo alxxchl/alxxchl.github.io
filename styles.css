@@ -1,115 +1,127 @@
-:root {
-  --paper: #e4e1db;  
-  --sunny: #efe85a;
-  --urban: #73c457;
-  --romantic: #2f80c7;
-  --delicious: #3a148a;
-  --cool: #000000;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-* { box-sizing: border-box; }
-
-html, body {
+html,
+body {
   height: 100%;
-  margin: 0;
-  font-family: system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
 }
 
-.layout {
-  min-height: 100svh;
-  display: grid;
-  grid-template-columns: 58% 42%;
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+    Arial, sans-serif;
+  color: #111;
 }
 
+.banner {
+  width: 100%;
+}
 
-.left{
-  position: relative;
-  background: var(--paper);
-  padding: clamp(20px, 4.8vw, 64px)
-           clamp(20px, 4.8vw, 64px)
-           clamp(20px, 4.8vw, 64px)
-           calc(var(--year-col) + clamp(12px, 2vw, 24px));
+.banner-inner {
+  width: 100%;                   
+  padding: 40px 60px 40px 60px;   
+  display: flex;
+  justify-content: space-between; 
+  align-items: flex-start;
+}
+
+.main-title img {
   display: block;
-  min-height: 100%;
+  height: 120px; 
 }
 
-.title{
-  margin: 0;
-  line-height: .9;
-  font-weight: 900;
-  font-size: clamp(48px, 8.2vw, 140px);
-  letter-spacing: -0.02em;
-  color: #000;
-}
-.title span{ display:block; }
-
-.year{
-  position: absolute;
-
-  bottom: clamp(20px, 4.8vw, 64px);
-  writing-mode: vertical-tb;
-  text-orientation: mixed;
-
-  font-weight: 900;
-  font-size: clamp(76px, 14vw, 200px);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: #000;
+.refresh-hint {
+  font-size: 20px;
+  font-weight: 600;
+  font-style: italic;
+  align-self: center;
 }
 
-.right {
-  display: grid;
-  grid-auto-rows: 1fr;
-  min-height: 100svh;
-}
 
-.block {
+.hero {
   position: relative;
-  display: grid;
-  place-items: center;
-  text-decoration: none;
-  color: #000;
-  font-weight: 800;
-  letter-spacing: .02em;
-  user-select: none;
-  background: var(--bg, #ccc);
-  overflow: hidden;
-  transition: transform .25s ease, filter .25s ease;
-}
-
-.block::after {
-  content: "";
-  position: absolute; inset: 0;
-  background-image: var(--img);
+  width: 100%;
+  height: calc(100vh - 160px); 
+  min-height: 400px;
   background-size: cover;
-  background-position: center;
-  opacity: 0;
-  transition: opacity .28s ease;
+  background-position: center center;
+  cursor: pointer;
+  overflow: hidden;
 }
 
-.block:hover::after,
-.block:focus-visible::after { opacity: 1; }
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
 
-.block:hover { transform: translateY(-1px); filter: saturate(1.05); }
+.hero-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;       
+  justify-content: space-between;
+  padding: 0 60px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;     
+}
 
-.block.is-dark { color:#fff; }
+.hero-explore {
+  font-size: 60px;
+  font-weight: 700;
+  color: #ffffff;
+}
 
-@media (max-width: 680px){
-  .layout{ grid-template-columns: 1fr; }
 
-  .left{
-    min-height: 36svh;
-    padding: clamp(20px, 8vw, 64px);
+.hero-city-title {
+  max-height: 80px;        
+  height: 70px;
+  width: auto;
+}
+
+
+.hero:hover .hero-overlay {
+  opacity: 1;
+}
+
+.hero:hover .hero-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .banner-inner {
+    padding: 24px 16px;
+    flex-direction: row;
+    align-items: center;
   }
 
-  .title{ font-size: clamp(40px, 12vw, 120px); }
-
-  .year{
-    position: static;
-    transform: none;
-    font-size: clamp(40px, 14vw, 100px);
-    margin-top: .6em;
+  .main-title img {
+    height: 90px;
   }
 
-  .right{ min-height: 64svh; }
+  .hero {
+    height: 60vh;
+  }
+
+  .hero-content {
+    padding: 0 24px;
+  }
+
+  .hero-explore {
+    font-size: 32px;
+  }
+
+  .hero-city-title {
+    max-height: 60px;
+    height: 60px;
+  }
 }

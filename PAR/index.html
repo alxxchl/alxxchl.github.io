@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Next Stop – Paris</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="main.js"></script>
+</head>
+<body>
+  <div class="page">
+
+    <header class="site-title">
+  <a href="../index.html" class="home-link">
+    <img src="nextstop_par_blk.png" alt="Next Stop" />
+  </a>
+</header>
+
+    <div class="city-logo">
+      <img src="par_blk.png" alt="Paris" />
+    </div>
+
+    <main class="floating-area" id="floatingArea">
+      <button
+        class="spot-card spot-card--square"
+        data-spot-id="eiffel-tower"
+        type="button"
+      >
+        <img src="eiffel-tower.jpg" alt="Eiffel Tower" />
+      </button>
+
+      <button
+        class="spot-card spot-card--vertical"
+        data-spot-id="the-louvre-museum"
+        type="button"
+      >
+        <img src="the-louvre-museum.jpg" alt="The Louvre Museum" />
+      </button>
+
+      <button
+        class="spot-card spot-card--square"
+        data-spot-id="arc-de-triomphe"
+        type="button"
+      >
+        <img src="arc-de-triomphe.jpg" alt="Arc de Triomphe" />
+      </button>
+
+      <button
+        class="spot-card spot-card--square"
+        data-spot-id="champs-elysees"
+        type="button"
+      >
+        <img src="champs-elysees.jpg" alt="Champs-Élysées" />
+      </button>
+
+        <button
+        class="spot-card spot-card--square"
+        data-spot-id="notre-dame-cathedral"
+        type="button"
+      >
+        <img src="notre-dame-cathedral.jpg" alt="Notre-Dame Cathedral" />
+      </button>
+
+        <button
+        class="spot-card spot-card--square"
+        data-spot-id="sacred-heart-of-montmartre"
+        type="button"
+      >
+        <img src="sacred-heart-of-montmartre.jpg" alt="Montmartre & Sacré-Cœur" />
+      </button>
+
+       <button
+        class="spot-card spot-card--square"
+        data-spot-id="orsay-museum"
+        type="button"
+      >
+        <img src="orsay-museum.jpg" alt="Musée d'Orsay" />
+      </button>
+
+    </main>
+
+    <div class="spot-overlay" id="spotOverlay">
+      <div class="spot-overlay-backdrop" id="spotOverlayBackdrop"></div>
+
+      <article class="spot-panel" id="spotPanel">
+        <button class="spot-close" id="spotClose" type="button">×</button>
+
+        <div class="spot-panel-image" id="spotPanelImage"></div>
+
+        <div class="spot-panel-text">
+          <h2 class="spot-panel-title" id="spotPanelTitle"></h2>
+          <p class="spot-panel-body" id="spotPanelBody"></p>
+        </div>
+      </article>
+    </div>
+  </div>
+</body>
+</html>

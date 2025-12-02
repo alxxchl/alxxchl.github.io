@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Next Stop – Los Angeles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="main.js"></script>
+</head>
+<body>
+  <div class="page">
+
+    <header class="site-title">
+  <a href="../index.html" class="home-link">
+    <img src="nextstop_lax_blk.png" alt="Next Stop" />
+  </a>
+</header>
+
+    <div class="city-logo">
+      <img src="lax_blk.png" alt="Los Angeles" />
+    </div>
+
+    <main class="floating-area" id="floatingArea">
+      <button
+        class="spot-card spot-card--square"
+        data-spot-id="row-dtla"
+        type="button"
+      >
+        <img src="row_dtla.jpg" alt="ROW DTLA" />
+      </button>
+
+      <button
+        class="spot-card spot-card--vertical"
+        data-spot-id="dtla"
+        type="button"
+      >
+        <img src="dtla.jpg" alt="DTLA" />
+      </button>
+
+      <button
+        class="spot-card spot-card--square"
+        data-spot-id="santa-monica"
+        type="button"
+      >
+        <img src="santamonica.jpg" alt="Santa Monica" />
+      </button>
+
+      <button
+        class="spot-card spot-card--square"
+        data-spot-id="getty-center"
+        type="button"
+      >
+        <img src="getty.jpg" alt="Getty Center" />
+      </button>
+
+        <button
+        class="spot-card spot-card--square"
+        data-spot-id="beverly-hills"
+        type="button"
+      >
+        <img src="beverlyhills.jpg" alt="Beverly Hills" />
+      </button>
+
+    </main>
+
+    <div class="spot-overlay" id="spotOverlay">
+      <div class="spot-overlay-backdrop" id="spotOverlayBackdrop"></div>
+
+      <article class="spot-panel" id="spotPanel">
+        <button class="spot-close" id="spotClose" type="button">×</button>
+
+        <div class="spot-panel-image" id="spotPanelImage"></div>
+
+        <div class="spot-panel-text">
+          <h2 class="spot-panel-title" id="spotPanelTitle"></h2>
+          <p class="spot-panel-body" id="spotPanelBody"></p>
+        </div>
+      </article>
+    </div>
+  </div>
+</body>
+</html>
