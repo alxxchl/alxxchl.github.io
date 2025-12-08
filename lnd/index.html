@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Next Stop – London</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="main.js"></script>
+</head>
+<body>
+  <div class="page">
+
+    <header class="site-title">
+      <a href="../index.html" class="home-link">
+        <img src="nextstop_lnd_blk.png" alt="Next Stop">
+      </a>
+    </header>
+
+    <div class="city-logo">
+      <img src="lnd_blk.png" alt="London">
+    </div>
+
+    <main class="floating-area" id="floatingArea">
+      <button class="spot-card square" data-spot="the-tower-of-london" type="button">
+        <img src="the-tower-of-london.jpg" alt="The Tower of London">
+      </button>
+
+      <button class="spot-card vertical" data-spot="westminster-abbey" type="button">
+        <img src="westminster-abbey.jpg" alt="Westminster Abbey">
+      </button>
+
+      <button class="spot-card square" data-spot="the-british-museum" type="button">
+        <img src="the-british-museum.jpg" alt="The British Museum">
+      </button>
+
+      <button class="spot-card square" data-spot="buckingham-palace" type="button">
+        <img src="buckingham-palace.jpg" alt="Buckingham Palace">
+      </button>
+
+      <button class="spot-card square" data-spot="the-london-eye" type="button">
+        <img src="the-london-eye.jpg" alt="The London Eye">
+      </button>
+
+      <button class="spot-card square" data-spot="borough-market" type="button">
+        <img src="borough-market.jpg" alt="Borough Market">
+      </button>
+
+      <button class="spot-card square" data-spot="trafalgar-square" type="button">
+        <img src="trafalgar-square.jpg" alt="Trafalgar Square">
+      </button>
+    </main>
+
+    <div class="spot-overlay" id="spotOverlay">
+      <div class="spot-overlay-backdrop" id="spotOverlayBackdrop"></div>
+
+      <article class="spot-panel" id="spotPanel">
+        <button class="spot-close" id="spotClose" type="button">×</button>
+
+        <div class="spot-panel-image" id="spotPanelImage"></div>
+
+        <div class="spot-panel-text">
+          <h2 class="spot-panel-title" id="spotPanelTitle"></h2>
+          <p class="spot-panel-body" id="spotPanelBody"></p>
+        </div>
+      </article>
+    </div>
+  </div>
+</body>
+</html>
