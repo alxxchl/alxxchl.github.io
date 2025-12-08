@@ -1,30 +1,30 @@
 const AREA_CONFIG = {
-  TheBund: {
-    image: "thebund.jpg",
+  Dotonbori: {
+    image: "dotonobori.jpg",
   },
-  Lujiazui: {
-    image: "lujiazui.jpg",
+  OsakaCastle: {
+    image: "osakacastle.jpg",
   },
-  NanjingRoad: {
-    image: "nanjingroad.jpg",
+  UniversalStudiosJapan: {
+    image: "universalstudiojapan.jpg",
   },
-  YuGarden: {
-    image: "yugarden.jpg",
+   UmedaSkyBuilding: {
+    image: "umedaskybuilding.jpg",
   },
-  HuainanRoad: {
-    image: "huainanroad.jpg",
+   Shinsaibashisuji: {
+    image: "shinsaibashisuji.jpg",
   },
-  Xintiandi: {
-    image: "xintiandi.jpg",
+    KuromonMarket: {
+    image: "kuromonmarket.jpg",
   },
-  WukangRoad: {
-    image: "wukangroad.jpg",
+    Shinsekai: {
+    image: "shinsekai.jpg",
   },
-  Tianzifang: {
-    image: "tianzifang.jpg",
+    OrangeStreet: {
+    image: "orangestreet.jpg",
   },
-  JinganTemple: {
-    image: "jingantemple.jpg",
+    Namba: {
+    image: "namba.jpg",
   },
 };
 

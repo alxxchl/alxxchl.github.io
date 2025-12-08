@@ -10,6 +10,7 @@
   font-weight: 700;
   font-style: normal;
 }
+
 *,
 *::before,
 *::after {
@@ -18,17 +19,15 @@
   padding: 0;
 }
 
-html,
-body {
+html, body {
   height: 100%;
 }
 
 body {
   font-family: "BrittiSans", sans-serif;
-  font-weight: 400;
   background: #ffffff;
   color: #111;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .page {
@@ -60,7 +59,7 @@ body {
 
 .city-logo img {
   display: block;
-  height: 130px; 
+  height: 130px;
   width: auto;
 }
 
@@ -74,38 +73,35 @@ body {
 .spot-card {
   position: absolute;
   border: none;
-  padding: 0;
-  margin: 0;
   cursor: pointer;
   border-radius: 32px;
   overflow: hidden;
   background: #ddd;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.22);
   transition:
     transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
     box-shadow 0.35s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .spot-card img {
-  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.spot-card--square {
+.spot-card.square {
   width: 260px;
   height: 260px;
 }
 
-.spot-card--vertical {
+.spot-card.vertical {
   width: 230px;
   height: 360px;
 }
 
 .spot-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 22px 50px rgba(0,0,0,0.3);
 }
 
 .page.has-open-spot .spot-card {
@@ -123,9 +119,9 @@ body {
 .spot-overlay-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.32);
+  background: rgba(0,0,0,0.32);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity .3s ease;
 }
 
 .spot-panel {
@@ -134,56 +130,40 @@ body {
   top: 50%;
   width: min(80vw, 880px);
   height: min(70vh, 540px);
-  transform: translate(-50%, -50%) scale(0.9) translateY(12px);
+  transform: translate(-50%, -50%) scale(.9) translateY(12px);
+  background: #000;
   border-radius: 40px;
   overflow: hidden;
-  background: #000;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
   opacity: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
   pointer-events: none;
   transition:
-    opacity 0.35s cubic-bezier(0.23, 1, 0.32, 1),
-    transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    opacity .35s cubic-bezier(0.23,1,0.32,1),
+    transform .35s cubic-bezier(0.23,1,0.32,1);
 }
 
 .spot-panel-image {
-  grid-area: 1 / 1 / 2 / 2;
+  position: absolute;
+  inset: 0;
   background-size: cover;
-  background-position: center center;
-  position: relative;
-  z-index: 1;            
+  background-position: center;
 }
 
 .spot-panel-image::after {
-  content: "";
+  content:"";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  pointer-events: none;
-  z-index: 2;
+  background: rgba(0,0,0,0.35);
 }
 
 .spot-panel-text {
-  grid-area: 1 / 1 / 2 / 2;
-  padding: 48px 56px;
-  color: #ffffff;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.4),
-    rgba(0, 0, 0, 0.1) 40%,
-    transparent 70%
-  );
   position: relative;
-  z-index: 3;            
+  padding: 48px 56px;
+  color: #fff;
 }
 
 .spot-panel-title {
   font-size: 36px;
   font-weight: 700;
-  letter-spacing: 0.06em;
   margin-bottom: 18px;
 }
 
@@ -199,14 +179,11 @@ body {
   right: 20px;
   width: 32px;
   height: 32px;
+  background: rgba(0,0,0,0.65);
   border-radius: 999px;
-  border: none;
-  background: rgba(0, 0, 0, 0.65);
-  color: #fff;
   font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: #fff;
+  border: none;
   cursor: pointer;
 }
 
@@ -221,7 +198,6 @@ body {
 .spot-overlay.is-open .spot-panel {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1) translateY(0);
-  pointer-events: auto;
 }
 
 @media (max-width: 900px) {
@@ -229,12 +205,12 @@ body {
     padding: 24px 16px 140px 160px;
   }
 
-  .spot-card--square {
+  .spot-card.square {
     width: 200px;
     height: 200px;
   }
 
-  .spot-card--vertical {
+  .spot-card.vertical {
     width: 190px;
     height: 280px;
   }
@@ -242,23 +218,5 @@ body {
   .spot-panel {
     width: min(90vw, 640px);
     height: min(70vh, 520px);
-    border-radius: 28px;
-  }
-
-  .spot-panel-text {
-    padding: 32px 28px;
-  }
-
-  .spot-panel-title {
-    font-size: 28px;
-  }
-
-  .spot-panel-body {
-    font-size: 13px;
-  }
-
-  .site-title img,
-  .city-logo img {
-    height: 90px;
   }
 }

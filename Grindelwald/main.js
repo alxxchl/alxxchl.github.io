@@ -1,4 +1,4 @@
-const SPOTS = {
+var SPOTS = {
   "jungfraujoch": {
     title: "JUNGFRAUJOCH",
     image: "jungfraujoch.jpg",
@@ -28,33 +28,45 @@ const SPOTS = {
     image: "männlichen.jpg",
     body:
       "Männlichen is a popular viewing mountain accessible by a long, scenic cable car from Grindelwald Terminal, renowned for its family-friendly trails and supreme views of the 'Big Three' mountains: Eiger, Mönch, and Jungfrau. It is worth visiting for the famous and relatively easy 'Royal Walk,' which leads to a crowned viewing platform at the summit for a 360-degree panorama. You can go to start the panoramic trail to Kleine Scheidegg, or simply take the short, 20-minute Royal Walk to the peak to feel like royalty overlooking the dramatic Bernese Alps."
-  },
+  }
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  const page = document.querySelector(".page");
-  const floatingArea = document.getElementById("floatingArea");
-  const cards = Array.from(document.querySelectorAll(".spot-card"));
+document.addEventListener("DOMContentLoaded", function () {
+  var page = document.querySelector(".page");
+  var floatingArea = document.getElementById("floatingArea");
+  var cards = document.querySelectorAll(".spot-card");
 
-  const overlay = document.getElementById("spotOverlay");
-  const overlayBackdrop = document.getElementById("spotOverlayBackdrop");
-  const panel = document.getElementById("spotPanel");
-  const panelImage = document.getElementById("spotPanelImage");
-  const panelTitle = document.getElementById("spotPanelTitle");
-  const panelBody = document.getElementById("spotPanelBody");
-  const panelClose = document.getElementById("spotClose");
+  var overlay = document.getElementById("spotOverlay");
+  var overlayBackdrop = document.getElementById("spotOverlayBackdrop");
+  var panel = document.getElementById("spotPanel");
+  var panelImage = document.getElementById("spotPanelImage");
+  var panelTitle = document.getElementById("spotPanelTitle");
+  var panelBody = document.getElementById("spotPanelBody");
+  var panelClose = document.getElementById("spotClose");
 
   positionCardsRandomly(floatingArea, cards);
 
-  cards.forEach(card => {
-    card.addEventListener("click", () => {
-      const id = card.dataset.spotId;
-      const config = SPOTS[id];
-      if (!config) return;
+  for (var i = 0; i < cards.length; i++) {
+    cards[i].addEventListener("click", function () {
+      var id = this.getAttribute("data-spot");
+      var config = SPOTS[id];
+
+      if (!config) {
+        return;
+      }
 
       openSpot(config);
     });
-  });
+  }
+
+  function openSpot(config) {
+    panelImage.style.backgroundImage = "url('" + config.image + "')";
+    panelTitle.textContent = config.title;
+    panelBody.textContent = config.body;
+
+    overlay.classList.add("is-open");
+    page.classList.add("has-open-spot");
+  }
 
   function closeSpot() {
     overlay.classList.remove("is-open");
@@ -64,71 +76,79 @@ document.addEventListener("DOMContentLoaded", () => {
   panelClose.addEventListener("click", closeSpot);
   overlayBackdrop.addEventListener("click", closeSpot);
 
-  function openSpot(config) {
-    panelImage.style.backgroundImage = `url('${config.image}')`;
-    panelTitle.textContent = config.title;
-    panelBody.textContent = config.body;
 
-    overlay.classList.add("is-open");
-    page.classList.add("has-open-spot");
-  }
+  function positionCardsRandomly(container, cardsNodeList) {
+    var rect = container.getBoundingClientRect();
+    var placed = [];
 
-  function positionCardsRandomly(container, cards) {
-    const rect = container.getBoundingClientRect();
-    const placed = [];
+    for (var i = 0; i < cardsNodeList.length; i++) {
+      var card = cardsNodeList[i];
+      var size = getCardSize(card);
 
-    cards.forEach(card => {
-      const cardRect = getCardSize(card);
-      const maxAttempts = 80;
-      let attempt = 0;
-      let placedPos = null;
+      var maxAttempts = 80;
+      var margin = 20;
 
-      while (attempt < maxAttempts && !placedPos) {
-        attempt++;
+      var topMin = margin;
+      var topMax = rect.height - size.height - margin - 80;
+      var leftMin = 0;
+      var leftMax = rect.width - size.width - margin;
 
-        const margin = 20;
-        const topMin = margin;
-        const topMax = rect.height - cardRect.height - margin - 80;
-        const leftMin = 0;
-        const leftMax = rect.width - cardRect.width - margin;
+      var chosen = null;
 
-        const top = randomBetween(topMin, topMax);
-        const left = randomBetween(leftMin, leftMax);
+      for (var attempt = 0; attempt < maxAttempts; attempt++) {
+        var top = randomBetween(topMin, topMax);
+        var left = randomBetween(leftMin, leftMax);
 
-        const candidate = {
-          top,
-          left,
-          width: cardRect.width,
-          height: cardRect.height
+        var candidate = {
+          top: top,
+          left: left,
+          width: size.width,
+          height: size.height
         };
 
         if (!intersectsAny(candidate, placed)) {
-          placedPos = candidate;
+          chosen = candidate;
+          break;
         }
       }
 
-      const finalPos = placedPos || {
-        top: 0,
-        left: 0,
-        width: cardRect.width,
-        height: cardRect.height
-      };
+      if (!chosen) {
+        chosen = {
+          top: margin,
+          left: margin + i * 20,
+          width: size.width,
+          height: size.height
+        };
+      }
 
-      card.style.top = `${finalPos.top}px`;
-      card.style.left = `${finalPos.left}px`;
+      card.style.top = chosen.top + "px";
+      card.style.left = chosen.left + "px";
 
-      placed.push(finalPos);
-    });
+      placed.push(chosen);
+    }
   }
 
   function getCardSize(card) {
-    const width = card.offsetWidth || 260;
-    const height = card.offsetHeight || 260;
-    return { width, height };
+    var width = card.offsetWidth;
+    var height = card.offsetHeight;
+
+    if (!width || !height) {
+      if (card.classList.contains("vertical")) {
+        width = 230;
+        height = 360;
+      } else {
+        width = 260;
+        height = 260;
+      }
+    }
+
+    return { width: width, height: height };
   }
 
   function randomBetween(min, max) {
-    if (max <= min) return min;
+    if (max <= min) {
+      return min;
+    }
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
@@ -142,6 +162,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function intersectsAny(candidate, list) {
-    return list.some(item => intersects(candidate, item));
+    for (var i = 0; i < list.length; i++) {
+      if (intersects(candidate, list[i])) {
+        return true;
+      }
+    }
+    return false;
   }
 });
