@@ -1,0 +1,127 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+    Arial, sans-serif;
+  color: #111;
+}
+
+.banner {
+  width: 100%;
+}
+
+.banner-inner {
+  width: 100%;                   
+  padding: 40px 60px 40px 60px;   
+  display: flex;
+  justify-content: space-between; 
+  align-items: flex-start;
+}
+
+.main-title img {
+  display: block;
+  height: 120px; 
+}
+
+.refresh-hint {
+  font-size: 20px;
+  font-weight: 600;
+  font-style: italic;
+  align-self: center;
+}
+
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 160px); 
+  min-height: 400px;
+  background-size: cover;
+  background-position: center center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.hero-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;       
+  justify-content: space-between;
+  padding: 0 60px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;     
+}
+
+.hero-explore {
+  font-size: 60px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+
+.hero-city-title {
+  max-height: 80px;        
+  height: 70px;
+  width: auto;
+}
+
+
+.hero:hover .hero-overlay {
+  opacity: 1;
+}
+
+.hero:hover .hero-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .banner-inner {
+    padding: 24px 16px;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .main-title img {
+    height: 90px;
+  }
+
+  .hero {
+    height: 60vh;
+  }
+
+  .hero-content {
+    padding: 0 24px;
+  }
+
+  .hero-explore {
+    font-size: 32px;
+  }
+
+  .hero-city-title {
+    max-height: 60px;
+    height: 60px;
+  }
+}
