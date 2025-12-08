@@ -23,9 +23,9 @@ var SPOTS = {
     body:
       "Carved out over millions of years by the Lower Grindelwald Glacier, this narrow gorge features 300-meter-high sheer rock walls and the rushing Lütschine River at the bottom. It is worth visiting for the immersive sensory experience of walking deep inside the mountain's core, feeling the raw power of nature. You can go to explore the kilometer-long steel catwalks and tunnels built into the rock, watch waterfalls cascade down, and for the adventurous, climb onto the Spiderweb net suspended high above the water."
   },
-  "männlichen": {
+  "mannlichen": {
     title: "Männlichen",
-    image: "männlichen.jpg",
+    image: "mannlichen.jpg",
     body:
       "Männlichen is a popular viewing mountain accessible by a long, scenic cable car from Grindelwald Terminal, renowned for its family-friendly trails and supreme views of the 'Big Three' mountains: Eiger, Mönch, and Jungfrau. It is worth visiting for the famous and relatively easy 'Royal Walk,' which leads to a crowned viewing platform at the summit for a 360-degree panorama. You can go to start the panoramic trail to Kleine Scheidegg, or simply take the short, 20-minute Royal Walk to the peak to feel like royalty overlooking the dramatic Bernese Alps."
   }
