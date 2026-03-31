@@ -1,289 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Archive</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden; 
-            background-color: #f7f7f7;
-            font-family: "Helvetica Neue", Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .top-right-text {
-            position: fixed;
-            top: 30px;
-            right: 40px;
-            font-size: 14px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            z-index: 10;
-            color: #111;
-            pointer-events: none;
-        }
-
-        .bottom-left-logo {
-            position: fixed;
-            bottom: 30px;
-            left: 40px;
-            height: 80px;
-            z-index: 10;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            cursor: pointer; 
-        }
-
-        .bottom-right-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 40px;
-            z-index: 60;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-            cursor: pointer;
-        }
-        .bottom-right-btn.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .bottom-right-btn img {
-            width: 60px;
-            border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-        }
-
-        .card-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .card {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 260px;
-            transform: translate(calc(-50% + var(--offsetX)), calc(-50% + var(--offsetY))) rotate(var(--rot));
-            transform-origin: center center;
-            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s ease;
-            pointer-events: auto;
-            cursor: pointer;
-            opacity: 1;
-            background: transparent;
-            will-change: transform;
-        }
-
-        .card:hover {
-            transform: translate(calc(-50% + var(--offsetX)), calc(-50% + var(--offsetY))) rotate(0deg) scale(1.1) !important;
-            z-index: 100 !important;
-        }
-
-        .card.fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .focused-card-container {
-            position: absolute;
-            top: 150%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transition: top 1s cubic-bezier(0.19, 1, 0.22, 1);
-            z-index: 50;
-            pointer-events: none;
-        }
-        .focused-card-container.active {
-            top: 50%;
-            pointer-events: auto;
-        }
-        .focused-card-container img {
-            width: 340px;
-        }
-
-        @media (max-width: 768px) {
-            
-            .top-right-text {
-                display: none; 
-            }
-
-            .bottom-left-logo {
-                left: 50%;
-                transform: translateX(-50%); 
-                bottom: 20px; 
-                width: 90%;   
-                height: auto; 
-                object-fit: contain;
-                z-index: 20;
-            }
-
-            .bottom-left-logo.hide-on-mobile {
-                opacity: 0;
-                pointer-events: none; 
-            }
-
-            .card-container {
-                display: flex; 
-                flex-direction: row;
-                align-items: center; 
-                justify-content: flex-start;
-                top: 0;
-                height: 75%; 
-                width: 100%;
-                overflow-x: auto; 
-                overflow-y: hidden;
-                pointer-events: auto; 
-                scroll-snap-type: x mandatory;
-                padding: 0 calc(50% - 130px); 
-                box-sizing: border-box;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none; 
-            }
-            .card-container::-webkit-scrollbar {
-                display: none;
-            }
-
-            .card {
-                position: relative; 
-                top: auto !important;
-                left: auto !important;
-                flex-shrink: 0; 
-                transform: none !important; 
-                margin: 0 15px; 
-                scroll-snap-align: center; 
-                width: 260px; 
-            }
-
-            .card:hover {
-                transform: none !important;
-            }
-
-            .focused-card-container img {
-                width: 85vw; 
-                max-width: 340px;
-            }
-            
-            .bottom-right-btn {
-                bottom: 20px;
-                right: 20px;
-                z-index: 100; 
-            }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Modular Design Guidelines</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <div class="top-right-text">THE ORIGINALS BY JORGE LUIS BORGES</div>
-
-    <img src="title_blk.png" alt="The Archive" class="bottom-left-logo" id="mainLogo">
-
-    <a href="#" class="bottom-right-btn" id="nextPageBtn">
-        <img src="light_blk.png" alt="Next Page">
-    </a>
-
-    <div class="card-container">
-        <img src="card1.svg" class="card" data-focus="news1.svg" data-link="private1/private1.html" alt="Card 1">
-        <img src="card2.svg" class="card" data-focus="news2.svg" data-link="private2/private2.html" alt="Card 2">
-        <img src="card3.svg" class="card" data-focus="news3.svg" data-link="private3/private3.html" alt="Card 3">
-        <img src="card4.svg" class="card" data-focus="news4.svg" data-link="private4/private4.html" alt="Card 4">
-        <img src="card5.svg" class="card" data-focus="news5.svg" data-link="private5/private5.html" alt="Card 5">
-        <img src="card6.svg" class="card" data-focus="news6.svg" data-link="private6/private6.html" alt="Card 6">
-    </div>
-
-    <div class="focused-card-container" id="focusedCardContainer">
-        <img src="" id="dynamicFocusedImage" alt="Focused Card">
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const cards = document.querySelectorAll('.card');
-            const focusedCardContainer = document.getElementById('focusedCardContainer');
-            const dynamicFocusedImage = document.getElementById('dynamicFocusedImage');
-            const nextPageBtn = document.getElementById('nextPageBtn');
-            const mainLogo = document.getElementById('mainLogo'); 
+    <div class="app-container">
+        
+        <header class="global-header">
+            <div class="header-left">
+                <h1>Spotify&reg;<br>Modular Design Guidelines</h1>
+            </div>
             
-            mainLogo.addEventListener('click', (e) => {
-                e.stopPropagation(); 
-                window.location.href = 'about/about.html'; 
-            });
+            <div class="header-center">
+                <img src="spotify.png" alt="Spotify Logo" class="spotify-logo">
+            </div>
             
-            const spreadDistance = 140; 
-            const maxRotation = 10;     
-            const yJitter = 40;         
-            const total = cards.length;
-            const centerIndex = (total - 1) / 2;
+            <div class="header-right">
+                <div class="search-bar">
+                    <span class="search-icon">&#128269;</span>
+                    <input type="text" placeholder="Search">
+                </div>
+            </div>
+        </header>
 
-            const isMobile = window.innerWidth <= 768;
+        <div class="main-layout">
+            
+            <aside class="sidebar">
+                <nav class="main-nav">
+                    <ul>
+                        <li class="active"><a href="#">Overview & Introduction</a></li>
+                        <li><a href="#">Design Foundation</a></li>
+                        <li><a href="card-library.html">The Card Library</a></li>
+                        <li><a href="#">Interaction</a></li>
+                    </ul>
+                </nav>
 
-            cards.forEach((card, index) => {
-                let baseX = (index - centerIndex) * spreadDistance;
-                let randomX = (Math.random() * 20) - 10; 
-                let finalX = baseX + randomX;
-                let randomY = (Math.random() * yJitter * 2) - yJitter;
-                let randomRot = (Math.random() * maxRotation * 2) - maxRotation;
+                <footer class="site-footer">
+                    <p>A Project at Parsons School of Design<br>by Alexander Chan</p>
+                </footer>
+            </aside>
 
-                card.style.setProperty('--offsetX', `${finalX}px`);
-                card.style.setProperty('--offsetY', `${randomY}px`);
-                card.style.setProperty('--rot', `${randomRot}deg`);
-                
-                if (!isMobile) {
-                    let distanceFromCenter = Math.abs(index - centerIndex);
-                    card.style.zIndex = total - distanceFromCenter;
-                }
-
-                card.addEventListener('click', (e) => {
-                    e.stopPropagation(); 
+            <main class="content-area">
+                <div class="content-card">
+                    <h2 class="section-title">OVERVIEW & INTRODUCTION</h2>
                     
-                    const targetFocusSrc = card.getAttribute('data-focus');
-                    const targetLink = card.getAttribute('data-link');
+                    <div class="intro-text-blocks">
+                        <div class="text-row">
+                            <h3>A Reimagined<br>Experience</h3>
+                            <p>Traditional music streaming interfaces are often trapped in linear lists and rigid grids. Spotify Mosaic breaks this convention. By deconstructing the Spotify ecosystem into a fluid, card-based architecture, we move away from a "browsing" experience toward a "discovery" journey. Inspired by the concept of a musical mosaic, this system is Made up by Cards, the unique and functional elements that pulse, adapt, and resonate with the user's personal rhythm.</p>
+                        </div>
+                        <div class="text-row">
+                            <h3>The 3 Column<br>Ecosystem</h3>
+                            <p>The interface is strategically divided into three vertical pillars, each serving a distinct purpose in the user's musical journey. This layout ensures that while the content is rich, the navigation remains intuitive.</p>
+                        </div>
+                    </div>
 
-                    if(targetFocusSrc) dynamicFocusedImage.src = targetFocusSrc;
-                    if(targetLink) nextPageBtn.href = targetLink;
+                    <div class="mockup-container">
+                        <img src="mainpage_screenshot.jpg" alt="Spotify Interface Mockup" class="mockup-image">
+                    </div>
 
-                    openFocusedView();
-                });
-            });
-
-            document.addEventListener('click', (e) => {
-                const isOpened = focusedCardContainer.classList.contains('active');
-                if (isOpened) {
-                    if (!focusedCardContainer.contains(e.target) && !nextPageBtn.contains(e.target)) {
-                        closeFocusedView();
-                    }
-                }
-            });
-
-            function openFocusedView() {
-                cards.forEach(c => {
-                    c.classList.add('fade-out');
-                    c.style.pointerEvents = 'none';
-                });
-                focusedCardContainer.classList.add('active');
-                nextPageBtn.classList.add('visible');
-                
-                mainLogo.classList.add('hide-on-mobile');
-            }
-
-            function closeFocusedView() {
-                cards.forEach(c => {
-                    c.classList.remove('fade-out');
-                    c.style.pointerEvents = 'auto';
-                });
-                focusedCardContainer.classList.remove('active');
-                nextPageBtn.classList.remove('visible');
-                
-                mainLogo.classList.remove('hide-on-mobile');
-            }
-        });
-    </script>
+                    <div class="three-columns-text">
+                        <div class="column">
+                            <p>The journey begins on the left, where the PERSONAL ARCHIVE anchors the experience. This column represents the user's musical DNA—their history, curated playlists, and personal status. By placing the "Self" at the start of the visual F-pattern, we ensure that every session starts from a place of familiarity and belonging.</p>
+                        </div>
+                        <div class="column">
+                            <p>The energy flows into the DISCOVERY HUB, the expansive heart of the Mosaic. This is where Spotify's algorithmic intelligence meets global trends. Here, the cards expand in scale and visual density, transforming passive listening into an immersive exploration of new albums and trending narratives. It is the bridge between what the user knows and what they are about to love.</p>
+                        </div>
+                        <div class="column">
+                            <p>The cycle completes on the right with the CONTROL & UTILITY. This column provides the precision instruments—Search, Genre Filters, and Playback. It acts as the "remote control" for the entire ecosystem, allowing the user to filter the chaos of global music into a personalized stream with a single tap.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            
+        </div>
+    </div>
 </body>
 </html>
