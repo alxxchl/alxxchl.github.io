@@ -192,8 +192,6 @@ body {
     border-radius: 28px; /* 圆角处理 */
     object-fit: cover;
     display: block;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-    background-color: #000;
 }
 
 /* 底部三列文本 */
