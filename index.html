@@ -1,82 +1,2159 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Modular Design Guidelines</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keeper</title>
+<style>
+  @font-face {
+    font-family: 'HelveticaNowLight';
+    src: url('fonts/HelveticaNowText-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'HelveticaNowRegular';
+    src: url('fonts/HelveticaNowText-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'HelveticaNowMedium';
+    src: url('fonts/HelveticaNowText-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  :root {
+    --green: #005506;
+    --lime: #CCFF00;
+    --dark-green: #1a3a1a;
+    --nav-height: 72px;
+    --font-light: 'HelveticaNowLight', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-regular: 'HelveticaNowRegular', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-medium: 'HelveticaNowMedium', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font: 'HelveticaNowRegular', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    color: var(--green);
+    font-family: var(--font);
+    letter-spacing: -0.06em;
+  }
+
+  /* ── MAIN SCROLL CONTAINER ── */
+  .page {
+    width: 100%;
+    height: 100vh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    padding-bottom: calc(var(--nav-height) + 32px);
+  }
+
+  /* ── CITY ROWS ── */
+  .city-list {
+    width: 100%;
+    padding-top: 40px;
+    overflow-x: clip; 
+  }
+
+  .page-title {
+    font-size: 100px;
+    font-family: var(--font-light);
+    font-weight: 400;
+    color: #000000;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    padding: 0 0px;
+    padding-top: 0vh;
+    padding-bottom: 15vh;
+  }
+
+  .city-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 100px;
+    position: relative;
+    cursor: default;
+    overflow: visible;
+  }
+
+  .city-name {
+    flex-shrink: 0;
+    width: 38%;
+    padding: 28px 0px;
+    font-size: 100px;
+    font-family: var(--font-light);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--green);
+    user-select: none;
+  }
+
+  /* ── IMAGE STRIP ── */
+  .image-strip {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 86px;
+  flex-direction: row-reverse;
+}
+  
+
+  .place-thumb {
+    flex-shrink: 0;
+    width: 130px;
+    height: 60px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 1;
+  }
+
+  .place-thumb:hover {
+    transform: scale(2);
+    z-index: 10;
+  }
+
+  .place-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* placeholder for missing images */
+  .place-thumb .ph {
+    width: 100%;
+    height: 100%;
+    background: #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    letter-spacing: 0;
+    color: #999;
+    font-family: var(--font);
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .place-thumb:hover .ph {
+    transform: scale(1.07);
+  }
+
+  /* ── POPUP OVERLAY ── */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .popup {
+    background: #fff;
+    display: flex;
+    width: min(880px, 90vw);
+    max-height: 80vh;
+    overflow: hidden;
+    transform: translateY(12px);
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border-radius: 2px;
+  }
+
+  .overlay.active .popup {
+    transform: translateY(0);
+  }
+
+  .popup-image {
+    width: 58%;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+    background: #e8e8e8;
+  }
+
+  .popup-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .popup-image .ph-large {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    background: #d5d5d5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    letter-spacing: 0;
+    color: #999;
+    font-family: var(--font);
+  }
+
+  .popup-info {
+    flex: 1;
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .popup-name {
+    font-size: 28px;
+    font-family: var(--font-medium);
+    font-weight: normal;
+    letter-spacing: -0.04em;
+    color: #000;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  .popup-native {
+    font-size: 13px;
+    font-family: var(--font-medium);
+    font-weight: normal;
+    color: #999;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+
+  .popup-address {
+    font-size: 14px;
+    font-family: var(--font-regular);
+    font-weight: normal;
+    color: #222;
+    letter-spacing: -0.02em;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .popup-tags {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 20px;
+  }
+
+  .popup-tags span {
+    font-size: 13px;
+    font-family: var(--font-regular);
+    font-weight: normal;
+    color: #999;
+    letter-spacing: -0.02em;
+  }
+
+  .popup-count {
+    font-size: 13px;
+    font-family: var(--font-regular);
+    font-weight: normal;
+    color: #555;
+    letter-spacing: -0.02em;
+    margin-bottom: auto;
+  }
+
+  .popup-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 32px;
+  }
+
+  .popup-btn {
+    flex: 1;
+    padding: 12px 16px;
+    background: #111;
+    color: #fff;
+    border: none;
+    font-family: var(--font-medium);
+    font-size: 13px;
+    font-weight: normal;
+    letter-spacing: -0.03em;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+  
+
+  .popup-btn:hover {
+    background: #333;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: #111;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 32px;
+    font-family: var(--font-medium);
+    font-size: 14px;
+    letter-spacing: -0.03em;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    white-space: nowrap;
+    z-index: 200;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .popup-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111;
+    z-index: 10;
+    transition: background 0.2s;
+  }
+
+  .popup-close:hover {
+    background: #fff;
+  }
+
+  /* ── BOTTOM NAV ── */
+  .nav-wrap {
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    z-index: 50;
+  }
+
+  /* logo wrap holds settings popup + the unified pill */
+  .nav-logo-wrap {
+    position: relative;
+  }
+
+  .nav-logo-btn {
+    width: 52px;
+    height: 52px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0;
+  }
+
+  .nav-logo-btn svg {
+    width: 28px;
+    height: 22px;
+  }
+
+  .nav-logo-btn:hover ~ .nav-settings-popup,
+.nav-settings-popup:hover {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+  .settings-btn {
+    padding: 14px 24px;
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 32px;
+    font-family: var(--font-medium);
+    font-size: 15px;
+    font-weight: normal;
+    letter-spacing: -0.04em;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  .settings-btn:hover {
+    background: #003803;
+  }
+
+  /* unified nav pill */
+  .nav-pill {
+    background: var(--lime);
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    gap: 0;
+    height: 64px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+  }
+
+  .nav-tab {
+    padding: 10px 28px;
+    border: none;
+    background: transparent;
+    font-family: var(--font-medium);
+    font-size: 20px;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    color: #111;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+    height: 52px;
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-tab:hover {
+    background: rgba(0,0,0,0.06);
+  }
+
+  .nav-tab.active {
+    background: var(--green);
+    color: #fff;
+  }
+
+  /* ── SEOUL SUBPAGE ── */
+  .subpage {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    padding-bottom: calc(var(--nav-height) + 32px);
+  }
+
+  .subpage.active {
+    display: block;
+  }
+
+  .subpage-header {
+    padding: 0 0px;
+    padding-top: 0vh;
+    padding-bottom: 15vh;
+  }
+
+  .subpage-explore {
+    font-size: 100px;
+    font-family: var(--font-light);
+    font-weight: 400;
+    color: #000;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .subpage-city {
+    font-size: 100px;
+    font-family: var(--font-light);
+    font-weight: 300;
+    color: var(--green);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .subpage-count {
+    font-size: 14px;
+    font-family: var(--font-regular);
+    font-weight: normal;
+    color: #999;
+    letter-spacing: -0.02em;
+    margin-top: 16px;
+    padding-left: 5px;
+  }
+
+  .tag-list {
+    width: 100%;
+    overflow-x: clip;
+  }
+
+  .tag-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 100px;
+    position: relative;
+    overflow: visible;
+  }
+
+  .tag-name {
+    flex-shrink: 0;
+    width: 38%;
+    padding: 28px 0px;
+    font-size: 100px;
+    font-family: var(--font-light);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #000000;
+    user-select: none;
+  }
+
+  .tag-strip {
+    position: absolute;
+    right: 0;
+    top: 55%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0;
+    height: 86px;
+    flex-direction: row-reverse;
+  }
+
+  .tag-thumb {
+    flex-shrink: 0;
+    width: 130px;
+    height: 60px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 1;
+  }
+
+  .tag-thumb:hover {
+    transform: scale(2);
+    z-index: 10;
+  }
+
+  .tag-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .tag-thumb .ph {
+    width: 100%;
+    height: 100%;
+    background: #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    letter-spacing: 0;
+    color: #999;
+    font-family: var(--font);
+  }
+
+  /* ── ARCHIVE PAGE ── */
+  .archive-page {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    padding-bottom: calc(var(--nav-height) + 32px);
+  }
+
+  .archive-page.active {
+    display: block;
+  }
+
+  .archive-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    width: 100%;
+  }
+
+  .archive-cell {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    cursor: pointer;
+    background: #e8e8e8;
+  }
+
+  .archive-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.75);
+    transition: filter 0.3s ease, transform 0.3s ease;
+  }
+
+  .archive-cell:hover img {
+    filter: brightness(0.6);
+    transform: scale(1.03);
+  }
+
+  .archive-cell-label {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    font-size: 40px;
+    font-family: var(--font-light);
+    font-weight: 300;
+    color: #fff;
+    letter-spacing: -0.0em;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  /* add cell */
+  .archive-cell-add {
+    aspect-ratio: 4/3;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .archive-cell-add:hover {
+    background: #e0e0e0;
+  }
+
+  .archive-cell-add svg {
+    width: 48px;
+    height: 48px;
+    color: #bbb;
+  }
+
+  /* ── UPLOAD OVERLAY ── */
+  .upload-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .upload-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .upload-modal {
+   display: flex;
+   width: min(880px, 90vw);
+   height: min(550px, 88vh);  /* ← 从 480px 改大 */
+   background: #fff;
+   transform: translateY(12px);
+   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+   border-radius: 2px;
+   overflow: hidden;
+  } 
+
+  .upload-overlay.active .upload-modal {
+    transform: translateY(0);
+  }
+
+  .upload-drop {
+    width: 58%;
+    flex-shrink: 0;
+    background: #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .upload-drop input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .upload-drop svg {
+    width: 48px;
+    height: 48px;
+    color: #bbb;
+    pointer-events: none;
+  }
+
+  .upload-drop-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+  }
+
+  .upload-form {
+  flex: 1;
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  }
+
+  .upload-title {
+    font-size: 28px;
+    font-family: var(--font-medium);
+    font-weight: normal;
+    color: #000;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+
+  .upload-field {
+    margin-bottom: 14px;
+  }
+
+  .upload-field-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
+  }
+
+  .upload-label {
+    font-size: 13px;
+    font-family: var(--font-medium);
+    font-weight: normal;
+    color: #000;
+    letter-spacing: -0.02em;
+  }
+
+  .upload-hint {
+    font-size: 11px;
+    font-family: var(--font-regular);
+    color: #999;
+    letter-spacing: -0.01em;
+  }
+
+  .upload-input {
+    width: 100%;
+    height: 28px;
+    background: #e0e0e0;
+    border: none;
+    outline: none;
+    font-family: var(--font-regular);
+    font-size: 13px;
+    padding: 0 8px;
+    color: #333;
+    letter-spacing: -0.02em;
+  }
+
+  .upload-keep-btn {
+  margin-top: 30px;
+  width: 100%;
+  padding: 15px;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-family: var(--font-medium);
+  font-size: 15px;
+  letter-spacing: -0.03em;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-bottom: 30px;  /* ← 和 padding-top 一致 */
+ } 
+
+  .upload-keep-btn:hover {
+    background: #333;
+  }
+
+  /* ── KEPT CONFIRMATION ── */
+  .kept-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .kept-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .kept-title {
+    font-size: 28px;
+    font-family: var(--font-medium);
+    font-weight: normal;
+    color: #fff;
+    letter-spacing: -0.04em;
+    margin-bottom: 12px;
+  }
+
+  .kept-sub {
+    font-size: 18px;
+    font-family: var(--font-regular);
+    font-weight: normal;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+  /* ── LOADING SCREEN ── */
+  .loading-screen {
+    position: fixed;
+    inset: 0;
+    background: #fff;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease;
+  }
+
+  .loading-screen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .loading-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .loading-k {
+    width: 48px;
+    height: 38px;
+  }
+
+  .loading-bar {
+    width: 160px;
+    height: 1px;
+    background: #e0e0e0;
+    border-radius: 1px;
+    overflow: hidden;
+  }
+
+  .loading-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--green);
+    border-radius: 1px;
+    animation: loadfill 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes loadfill {
+    0%   { width: 0%; }
+    60%  { width: 75%; }
+    100% { width: 100%; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.4s ease forwards;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+
+    /* Page title */
+    .page-title {
+      font-size: 48px;
+      padding-bottom: 8vh;
+      padding-left: 20px;
+    }
+
+    /* City list — vertical full-screen cards */
+    .city-list {
+      padding-top: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .city-row {
+      flex-direction: column;
+      align-items: flex-start;
+      min-height: auto;
+      padding: 0 0 32px 0;
+      overflow: hidden;
+    }
+
+    .city-name {
+      width: 100%;
+      font-size: 48px;
+      padding: 12px 20px 16px 20px;
+      letter-spacing: -0.04em;
+    }
+
+    /* Image strip → horizontal scroll card row */
+    .image-strip {
+      position: static;
+      transform: none;
+      width: 100%;
+      height: auto;
+      flex-direction: row;
+      overflow-x: auto;
+      overflow-y: visible;
+      padding: 0 20px 8px 20px;
+      gap: 8px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      justify-content: flex-start;
+    }
+
+    .image-strip::-webkit-scrollbar { display: none; }
+
+    .place-thumb {
+      flex-shrink: 0;
+      width: 200px;
+      height: 140px;
+    }
+
+    .place-thumb:hover {
+      transform: scale(1.03);
+    }
+
+    /* Subpage header */
+    .subpage-header {
+      padding: 20px 20px 8vh 20px;
+    }
+
+    .subpage-explore,
+    .subpage-city {
+      font-size: 48px;
+      letter-spacing: -0.04em;
+    }
+
+    /* Tag rows */
+    .tag-row {
+      flex-direction: column;
+      align-items: flex-start;
+      min-height: auto;
+      padding-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .tag-name {
+      width: 100%;
+      font-size: 48px;
+      padding: 12px 20px 16px 20px;
+      letter-spacing: -0.04em;
+    }
+
+    .tag-strip {
+      position: static;
+      transform: none;
+      width: 100%;
+      height: auto;
+      flex-direction: row;
+      overflow-x: auto;
+      overflow-y: visible;
+      padding: 0 20px 8px 20px;
+      gap: 8px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .tag-strip::-webkit-scrollbar { display: none; }
+
+    .tag-thumb {
+      flex-shrink: 0;
+      width: 200px;
+      height: 140px;
+      cursor: pointer;
+    }
+
+    .tag-thumb:hover {
+      transform: scale(1.03);
+    }
+
+    /* Archive grid → 1 column */
+    .archive-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .archive-cell-label {
+      font-size: 28px;
+    }
+
+    /* Popup */
+    .popup {
+      flex-direction: column;
+      width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .popup-image {
+      width: 100%;
+      height: 240px;
+      flex-shrink: 0;
+    }
+
+    .popup-info {
+      padding: 24px 20px;
+    }
+
+    .popup-name {
+      font-size: 22px;
+    }
+
+    /* Nav */
+    .nav-wrap {
+      bottom: 24px;
+    }
+
+    .nav-pill {
+      height: 52px;
+    }
+
+    .nav-tab {
+      padding: 8px 18px;
+      font-size: 14px;
+      height: 42px;
+    }
+
+    .nav-logo-btn {
+      width: 42px;
+      height: 42px;
+    }
+
+    /* Upload modal */
+    .upload-modal {
+      flex-direction: column;
+      width: 95vw;
+      height: 90vh;
+      overflow-y: auto;
+    }
+
+    .upload-drop {
+      width: 100%;
+      height: 200px;
+      flex-shrink: 0;
+    }
+  }
+</style>
 </head>
 <body>
-    <div class="app-container">
-        
-        <header class="global-header">
-            <div class="header-left">
-                <h1>Spotify&reg;<br>Modular Design Guidelines</h1>
-            </div>
-            
-            <div class="header-center">
-                <img src="spotify.png" alt="Spotify Logo" class="spotify-logo">
-            </div>
-            
-            <div class="header-right">
-                <div class="search-bar">
-                    <span class="search-icon">&#128269;</span>
-                    <input type="text" placeholder="Search">
-                </div>
-            </div>
-        </header>
 
-        <div class="main-layout">
-            
-            <aside class="sidebar">
-                <nav class="main-nav">
-                    <ul>
-                        <li class="active"><a href="#">Overview & Introduction</a></li>
-                        <li><a href="#">Design Foundation</a></li>
-                        <li><a href="card-library.html">The Card Library</a></li>
-                        <li><a href="#">Interaction</a></li>
-                    </ul>
-                </nav>
-
-                <footer class="site-footer">
-                    <p>A Project at Parsons School of Design<br>by Alexander Chan</p>
-                </footer>
-            </aside>
-
-            <main class="content-area">
-                <div class="content-card">
-                    <h2 class="section-title">OVERVIEW & INTRODUCTION</h2>
-                    
-                    <div class="intro-text-blocks">
-                        <div class="text-row">
-                            <h3>A Reimagined<br>Experience</h3>
-                            <p>Traditional music streaming interfaces are often trapped in linear lists and rigid grids. Spotify Modular breaks this convention. By deconstructing the Spotify ecosystem into a fluid, card-based architecture, we move away from a "browsing" experience toward a "discovery" journey. This system is Made up by Cards, the unique and functional elements that pulse, adapt, and resonate with the user's personal rhythm.</p>
-                        </div>
-                        <div class="text-row">
-                            <h3>The 3 Column<br>Ecosystem</h3>
-                            <p>The interface is strategically divided into three vertical pillars, each serving a distinct purpose in the user's musical journey. This layout ensures that while the content is rich, the navigation remains intuitive.</p>
-                        </div>
-                    </div>
-
-                    <div class="mockup-container">
-                        <img src="mainpage_screenshot.jpg" alt="Spotify Interface Mockup" class="mockup-image">
-                    </div>
-
-                    <div class="three-columns-text">
-                        <div class="column">
-                            <p>The journey begins on the left, where the PERSONAL ARCHIVE anchors the experience. This column represents the user's musical DNA—their history, curated playlists, and personal status. By placing the "Self" at the start of the visual F-pattern, we ensure that every session starts from a place of familiarity and belonging.</p>
-                        </div>
-                        <div class="column">
-                            <p>The energy flows into the DISCOVERY HUB, the expansive heart of the Mosaic. This is where Spotify's algorithmic intelligence meets global trends. Here, the cards expand in scale and visual density, transforming passive listening into an immersive exploration of new albums and trending narratives. It is the bridge between what the user knows and what they are about to love.</p>
-                        </div>
-                        <div class="column">
-                            <p>The cycle completes on the right with the CONTROL & UTILITY. This column provides the precision instruments—Search, Genre Filters, and Playback. It acts as the "remote control" for the entire ecosystem, allowing the user to filter the chaos of global music into a personalized stream with a single tap.</p>
-                        </div>
-                    </div>
-                </div>
-            </main>
-            
-        </div>
+<!-- LOADING SCREEN -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-logo">
+    <div class="loading-bar">
+      <div class="loading-bar-fill"></div>
     </div>
+  </div>
+</div>
+
+<div class="page" id="page">
+  <div class="page-title">Explore</div>
+  <div class="city-list" id="cityList"></div>
+</div>
+
+<!-- SEOUL SUBPAGE -->
+<div class="subpage" id="seoulPage">
+  <div class="subpage-header">
+  <div class="subpage-title-row">
+    <span class="subpage-explore">Explore</span>
+    <span class="subpage-city">Seoul</span>
+  </div>
+  <div class="subpage-count">121,221 people kept their memories here.</div>
+</div>
+  <div class="tag-list" id="seoulTagList"></div>
+</div>
+
+<!-- POPUP OVERLAY -->
+<div class="overlay" id="overlay">
+  <div class="popup" id="popup">
+    <div class="popup-image" id="popupImage">
+      <div class="ph-large">[ Image placeholder ]</div>
+    </div>
+    <div class="popup-info">
+      <button class="popup-close" id="popupClose">✕</button>
+      <div class="popup-name" id="popupName"></div>
+      <div class="popup-native" id="popupNative"></div>
+      <div class="popup-address" id="popupAddress"></div>
+      <div class="popup-tags" id="popupTags"></div>
+      <div class="popup-count" id="popupCount"></div>
+      <div class="popup-actions">
+        <button class="popup-btn" onclick="showToast('You\'ve visited here')">Mark as Visited</button>
+        <button class="popup-btn" onclick="showToast('Added to your wishlist')">Add to Wishlist</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ARCHIVE PAGE -->
+<div class="archive-page" id="archivePage">
+  <div class="archive-grid" id="archiveGrid"></div>
+</div>
+
+<!-- ARCHIVE TOKYO SUBPAGE -->
+<div class="subpage" id="tokyoArchivePage">
+  <div class="subpage-header">
+    <div class="subpage-title-row">
+      <span class="subpage-explore" style="color:#000;">Archive</span>
+      <span class="subpage-city">Tokyo</span>
+    </div>
+    <div class="subpage-count">You stayed 55 days here.</div>
+  </div>
+  <div class="tag-list" id="tokyoTagList"></div>
+
+  <!-- Wishlist section -->
+  <div style="height: 20vh;"></div>
+  <div class="subpage-header">
+    <div class="subpage-title-row">
+      <span class="subpage-explore" style="color:#000;">My Wishlist</span>
+    </div>
+  </div>
+  <div class="tag-list" id="tokyoWishlistList"></div>
+</div>
+
+<!-- UPLOAD OVERLAY -->
+<div class="upload-overlay" id="uploadOverlay">
+  <div class="upload-modal">
+    <div class="upload-drop" id="uploadDrop">
+      <input type="file" accept="image/*" id="uploadFileInput">
+      <img class="upload-drop-preview" id="uploadPreview" alt="preview">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" id="uploadIcon">
+        <path d="M12 4v16m-8-8h16" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="upload-form">
+      <div class="upload-title">Upload your<br>memories</div>
+      <div class="upload-field">
+        <div class="upload-field-header">
+          <span class="upload-label">Title</span>
+          <span class="upload-hint">Name of the Place or event</span>
+        </div>
+        <input class="upload-input" type="text" placeholder="">
+      </div>
+      <div class="upload-field">
+        <div class="upload-field-header">
+          <span class="upload-label">Subtitle</span>
+        </div>
+        <input class="upload-input" type="text" placeholder="">
+      </div>
+      <div class="upload-field">
+        <div class="upload-field-header">
+          <span class="upload-label">Add hashtags #...</span>
+        </div>
+        <input class="upload-input" type="text" placeholder="">
+      </div>
+      <div class="upload-field">
+        <div class="upload-field-header">
+          <span class="upload-label">Date of visit</span>
+        </div>
+        <input class="upload-input" type="text" placeholder="">
+      </div>
+      <div class="upload-field">
+        <div class="upload-field-header">
+          <span class="upload-label">Location</span>
+          <span class="upload-hint">Leave empty to extract location from EXIF</span>
+        </div>
+        <input class="upload-input" type="text" placeholder="">
+      </div>
+      <button class="upload-keep-btn" id="uploadKeepBtn">Keep</button>
+    </div>
+  </div>
+</div>
+
+<!-- KEPT OVERLAY -->
+<div class="kept-overlay" id="keptOverlay">
+  <div class="kept-title">Kept!</div>
+  <div class="kept-sub">You can revisit your memory at your personal archive.</div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="nav-wrap">
+  <div class="nav-logo-wrap">
+    <div class="nav-pill">
+      <button class="nav-logo-btn" aria-label="Keeper">
+        <img src="logo.png" alt="Keeper" style="width:32px;height:32px;object-fit:contain;">
+      </button>
+      <button class="nav-tab active" data-tab="explore">Explore</button>
+      <button class="nav-tab" data-tab="archive">Archive</button>
+    </div>
+  </div>
+</nav>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+// Edit cities and places freely. Add more cities or change existing ones.
+const CITIES = [
+  {
+    name: "Seoul",
+    places: [
+      {
+        name: "Protokoll Roasters",
+        native: "프로토콜",
+        address: "109 Yeonhui-ro,Seodaemun-gu,Seoul, South Korea",
+        tags: ["#coffee", "#cafe", "#aesthetic"],
+        count: "1,221 people kept their memories here.",
+        image: "memories/seoul/protokoll.jpg" // replace with image path or URL
+      },
+      {
+        name: "8DIVISION",
+        native: "",
+        address: "31 Toegye-ro 18-gil,Jung-gu,Seoul, South Korea",
+        tags: ["#shop", "#clothing", "#fashion"],
+        count: "122 people kept their memories here.",
+        image: "memories/seoul/8division.jpg"
+      },
+      {
+        name: "WORKSOUT APGUJEONG",
+        native: "",
+        address: "20-4 Seolleung-ro 157-gil, Gangnam-gu, Seoul, South Korea",
+        tags: ["#shop", "#clothing", "#fashion"],
+        count: "108 people kept their memories here.",
+        image: "memories/seoul/worksout_apgujeong.jpg"
+      },
+      {
+        name: "Leeum Museum",
+        native: "리움미술관",
+        address: "60-16 Itaewon-ro 55-gil,Yongsan-gu,Seoul, South Korea",
+        tags: ["#museum", "#art", "#design"],
+        count: "3,456 people kept their memories here.",
+        image: "memories/seoul/leeum_museum.jpg"
+      },
+      {
+        name: "Ongozisin",
+        native: "온고지신",
+        address: "101 Gwanak-ro 14-gil, 2F, Gwanak-gu, Seoul, South Korea",
+        tags: ["#tea", "#chill", "#aesthetic"],
+        count: "1,871 people kept their memories here.",
+        image: "memories/seoul/ongozisin.jpg"
+      },
+      {
+        name: "DANSE",
+        native: "당스",
+        address: "23-5 Hangang-daero 7-gil, Yongsan-gu, Seoul, South Korea",
+        tags: ["#food", "#dinner", "#mustgo"],
+        count: "211 people kept their memories here.",
+        image: "memories/seoul/danse.jpg"
+      },
+      {
+        name: "MAKJI Yeonhui",
+        native: "막지 연희점",
+        address: "124-31 Yeonhui-dong, Seodaemun-gu, Seoul, South Korea",
+        tags: ["#desert", "#aesthetic", "#mustgo"],
+        count: "512 people kept their memories here.",
+        image: "memories/seoul/makji.jpg"
+      },
+      {
+        name: "Philosophy Lounge",
+        native: "",
+        address: "21-19 Chungmu-ro, Jung-gu, Seoul, South Korea",
+        tags: ["#drink", "#lounge", "#night"],
+        count: "1,112 people kept their memories here.",
+        image: "memories/seoul/philosophy.jpg"
+      },
+      {
+        name: "Hanok Essay Nuha",
+        native: "",
+        address: "35-12 Pirundae-ro, Jongno-gu, Seoul, South Korea",
+        tags: ["#stay", "#wellness", "#aesthetic"],
+        count: "12 people kept their memories here.",
+        image: "memories/seoul/hanok.jpg"
+      },
+      {
+        name: "LLEGE",
+        native: "",
+        address: "14 Hannam-daero 40-gil, Yongsan-gu, Seoul, South Korea",
+        tags: ["#fashion", "#shop", "#aesthetic"],
+        count: "23 people kept their memories here.",
+        image: "memories/seoul/llege.jpg"
+      }
+    ]
+  },
+  {
+    name: "Geneva",
+    places: [
+      {
+        name: "Bains des Pâquis",
+        native: "Les Bains",
+        address: "Quai du Mont-Blanc 30,\n1201 Geneva,\nSwitzerland",
+        tags: ["#lake", "#swimming", "#social"],
+        count: "2,340 people kept their memories here.",
+        image: "memories/geneva/geneva1.jpg"
+      },
+      {
+        name: "MAMCO",
+        native: "Musée d'art moderne",
+        address: "10 Rue des Vieux-Grenadiers,\n1205 Geneva,\nSwitzerland",
+        tags: ["#contemporary art", "#museum"],
+        count: "987 people kept their memories here.",
+        image: "memories/geneva/geneva2.jpg"
+      },
+      {
+        name: "Café des Bains",
+        native: "Café des Bains",
+        address: "26 Rue des Bains,\n1205 Geneva,\nSwitzerland",
+        tags: ["#cafe", "#design district"],
+        count: "612 people kept their memories here.",
+        image: "memories/geneva/geneva3.jpg"
+      },
+      {
+        name: "Quartier des Grottes",
+        native: "Les Grottes",
+        address: "Quartier des Grottes,\nGeneva, Switzerland",
+        tags: ["#neighbourhood", "#art nouveau", "#walk"],
+        count: "1,455 people kept their memories here.",
+        image: "memories/geneva/geneva5.jpg"
+      },
+      {
+        name: "Café des Bains",
+        native: "Café des Bains",
+        address: "26 Rue des Bains,\n1205 Geneva,\nSwitzerland",
+        tags: ["#cafe", "#design district"],
+        count: "612 people kept their memories here.",
+        image: "memories/geneva/geneva6.jpg"
+      },
+      {
+        name: "Café des Bains",
+        native: "Café des Bains",
+        address: "26 Rue des Bains,\n1205 Geneva,\nSwitzerland",
+        tags: ["#cafe", "#design district"],
+        count: "612 people kept their memories here.",
+        image: "memories/geneva/geneva7.jpg"
+      },
+      {
+        name: "Café des Bains",
+        native: "Café des Bains",
+        address: "26 Rue des Bains,\n1205 Geneva,\nSwitzerland",
+        tags: ["#cafe", "#design district"],
+        count: "612 people kept their memories here.",
+        image: "memories/geneva/geneva9.jpg"
+      },
+      {
+        name: "Café des Bains",
+        native: "Café des Bains",
+        address: "26 Rue des Bains,\n1205 Geneva,\nSwitzerland",
+        tags: ["#cafe", "#design district"],
+        count: "612 people kept their memories here.",
+        image: "memories/geneva/geneva10.jpg"
+      }
+    ]
+  },
+  {
+    name: "Shanghai",
+    places: [
+      {
+        name: "Sinan Bookshop",
+        native: "思南书局",
+        address: "Zhongshan East 1st Road,\nHuangpu District,\nShanghai, China",
+        tags: ["#chill", "#bookstore", "#shop"],
+        count: "18,204 people kept their memories here.",
+        image: "memories/shanghai/shanghai1.jpg"
+      },
+      {
+        name: "Xujiahui Bookstore",
+        native: "徐家汇书局",
+        address: "505 Fuxing Middle Road,\nXuhui District,\nShanghai, China",
+        tags: ["#chill", "#bookstore", "#shop"],
+        count: "3,211 people kept their memories here.",
+        image: "memories/shanghai/shanghai2.jpg"
+      },
+      {
+        name: "Too Cafe",
+        native: "兔Cafe",
+        address: "50 Moganshan Road,\nPutuo District,\nShanghai, China",
+        tags: ["#cafe", "#chill", "#kawaii"],
+        count: "4,678 people kept their memories here.",
+        image: "memories/shanghai/shanghai3.jpg"
+      },
+      {
+        name: "Little George",
+        native: "小乔治",
+        address: "376 Wukang Road,\nXuhui District,\nShanghai, China",
+        tags: ["#brunch","#chill", "#mustgo"],
+        count: "9,102 people kept their memories here.",
+        image: "memories/shanghai/shanghai4.jpg"
+      },
+      {
+        name: "M50 Creative Park",
+        native: "M50创意园",
+        address: "50 Moganshan Road,\nPutuo District,\nShanghai, China",
+        tags: ["#art", "#gallery", "#creative"],
+        count: "4,678 people kept their memories here.",
+        image: "memories/shanghai/shanghai5.jpg"
+      },
+      {
+        name: "Evagelion Unit-01",
+        native: "新世纪福音战士·零号机",
+        address: "50 Moganshan Road,\nPutuo District,\nShanghai, China",
+        tags: ["#art", "#gallery", "#creative"],
+        count: "4,678 people kept their memories here.",
+        image: "memories/shanghai/shanghai6.jpg"
+      },
+      {
+        name: "M50 Creative Park",
+        native: "M50创意园",
+        address: "50 Moganshan Road,\nPutuo District,\nShanghai, China",
+        tags: ["#art", "#gallery", "#creative"],
+        count: "4,678 people kept their memories here.",
+        image: "memories/shanghai/shanghai7.jpg"
+      },
+      {
+        name: "Baoshan Waterside Park",
+        native: "宝山滨江公园",
+        address: "50 Moganshan Road,\nPutuo District,\nShanghai, China",
+        tags: ["#nature", "#park", "#waterside"],
+        count: "4,678 people kept their memories here.",
+        image: "memories/shanghai/shanghai8.jpg"
+      },
+      {
+        name: "Ocean's Table",
+        native: "",
+        address: "50 Moganshan Road,\nPutuo District,\nShanghai, China",
+        tags: ["#food", "#mustgo", "#dinner"],
+        count: "4,678 people kept their memories here.",
+        image: "memories/shanghai/shanghai9.jpg"
+      },
+    ]
+  },
+  {
+    name: "Munich",
+    places: [
+      {
+        name: "English Garden",
+        native: "Englischer Garten",
+        address: "Englischer Garten 1,\n80538 Munich,\nGermany",
+        tags: ["#park", "#urban", "#river surfing"],
+        count: "12,550 people kept their memories here.",
+        image: "memories/munich/munich1.jpg"
+      },
+      {
+        name: "Haus der Kunst",
+        native: "Haus der Kunst",
+        address: "Prinzregentenstraße 1,\n80538 Munich,\nGermany",
+        tags: ["#contemporary art", "#museum", "#bauhaus"],
+        count: "2,890 people kept their memories here.",
+        image: "memories/munich/munich2.jpg"
+      },
+      {
+        name: "Schwabing",
+        native: "Schwabing",
+        address: "Schwabing,\nMunich, Germany",
+        tags: ["#neighbourhood", "#bohemian", "#cafe"],
+        count: "3,741 people kept their memories here.",
+        image: "memories/munich/munich3.jpg"
+      },
+      {
+        name: "Viktualienmarkt",
+        native: "Viktualienmarkt",
+        address: "Viktualienmarkt 3,\n80331 Munich,\nGermany",
+        tags: ["#market", "#food", "#local"],
+        count: "7,234 people kept their memories here.",
+        image: "memories/munich/munich4.jpg"
+      },
+      {
+        name: "Schwabing",
+        native: "Schwabing",
+        address: "Schwabing,\nMunich, Germany",
+        tags: ["#neighbourhood", "#bohemian", "#cafe"],
+        count: "3,741 people kept their memories here.",
+        image: "memories/munich/munich5.jpg"
+      },
+      {
+        name: "Schwabing",
+        native: "Schwabing",
+        address: "Schwabing,\nMunich, Germany",
+        tags: ["#neighbourhood", "#bohemian", "#cafe"],
+        count: "3,741 people kept their memories here.",
+        image: "memories/munich/munich6.jpg"
+      },
+      {
+        name: "Schwabing",
+        native: "Schwabing",
+        address: "Schwabing,\nMunich, Germany",
+        tags: ["#neighbourhood", "#bohemian", "#cafe"],
+        count: "3,741 people kept their memories here.",
+        image: "memories/munich/munich7.jpg"
+      },
+      {
+        name: "Schwabing",
+        native: "Schwabing",
+        address: "Schwabing,\nMunich, Germany",
+        tags: ["#neighbourhood", "#bohemian", "#cafe"],
+        count: "3,741 people kept their memories here.",
+        image: "memories/munich/munich8.jpg"
+      },
+      {
+        name: "Schwabing",
+        native: "Schwabing",
+        address: "Schwabing,\nMunich, Germany",
+        tags: ["#neighbourhood", "#bohemian", "#cafe"],
+        count: "3,741 people kept their memories here.",
+        image: "memories/munich/munich9.jpg"
+      },
+      {
+        name: "Schwabing",
+        native: "Schwabing",
+        address: "Schwabing,\nMunich, Germany",
+        tags: ["#neighbourhood", "#bohemian", "#cafe"],
+        count: "3,741 people kept their memories here.",
+        image: "memories/munich/munich10.jpg"
+      }
+    ]
+  },
+  {
+    name: "Los Angeles",
+    places: [
+      {
+        name: "The Broad",
+        native: "The Broad",
+        address: "221 S Grand Ave,\nLos Angeles,\nCA 90012",
+        tags: ["#museum", "#contemporary art"],
+        count: "6,344 people kept their memories here.",
+        image: "memories/la/la1.jpg"
+      },
+      {
+        name: "Grand Central Market",
+        native: "Grand Central Market",
+        address: "317 S Broadway,\nLos Angeles,\nCA 90013",
+        tags: ["#food", "#market", "#historic"],
+        count: "8,102 people kept their memories here.",
+        image: "memories/la/la2.jpg"
+      },
+      {
+        name: "Eames House",
+        native: "Case Study #8",
+        address: "203 N Chautauqua Blvd,\nPacific Palisades,\nCA 90272",
+        tags: ["#architecture", "#design", "#pilgrimage"],
+        count: "2,011 people kept their memories here.",
+        image: "memories/la/la3.jpg"
+      },
+      {
+        name: "Eames House",
+        native: "Case Study #8",
+        address: "203 N Chautauqua Blvd,\nPacific Palisades,\nCA 90272",
+        tags: ["#architecture", "#design", "#pilgrimage"],
+        count: "2,011 people kept their memories here.",
+        image: "memories/la/la5.jpg"
+      },
+      {
+        name: "Eames House",
+        native: "Case Study #8",
+        address: "203 N Chautauqua Blvd,\nPacific Palisades,\nCA 90272",
+        tags: ["#architecture", "#design", "#pilgrimage"],
+        count: "2,011 people kept their memories here.",
+        image: "memories/la/la6.jpg"
+      },
+      {
+        name: "Eames House",
+        native: "Case Study #8",
+        address: "203 N Chautauqua Blvd,\nPacific Palisades,\nCA 90272",
+        tags: ["#architecture", "#design", "#pilgrimage"],
+        count: "2,011 people kept their memories here.",
+        image: "memories/la/la7.jpg"
+      },
+      {
+        name: "Silverlake Reservoir",
+        native: "Silverlake",
+        address: "Silver Lake Reservoir,\nLos Angeles,\nCA 90039",
+        tags: ["#walk", "#neighbourhood", "#golden hour"],
+        count: "4,987 people kept their memories here.",
+        image: "memories/la/la8.jpg"
+      }
+    ]
+  },
+  {
+    name: "Copenhagen",
+    places: [
+      {
+        name: "Louisiana Museum",
+        native: "Louisiana",
+        address: "GL Strandvej 13,\n3050 Humlebæk,\nDenmark",
+        tags: ["#museum", "#modern art", "#coast"],
+        count: "4,322 people kept their memories here.",
+        image: "memories/copenhagen/copen2.jpg"
+      },
+      {
+        name: "Nørrebro",
+        native: "Nørrebro",
+        address: "Nørrebro,\nCopenhagen, Denmark",
+        tags: ["#neighbourhood", "#multicultural", "#cafe"],
+        count: "7,811 people kept their memories here.",
+        image: "memories/copenhagen/copen3.jpg"
+      },
+      {
+        name: "Nørrebro",
+        native: "Nørrebro",
+        address: "Nørrebro,\nCopenhagen, Denmark",
+        tags: ["#neighbourhood", "#multicultural", "#cafe"],
+        count: "7,811 people kept their memories here.",
+        image: "memories/copenhagen/copen4.jpg"
+      },
+      {
+        name: "Nørrebro",
+        native: "Nørrebro",
+        address: "Nørrebro,\nCopenhagen, Denmark",
+        tags: ["#neighbourhood", "#multicultural", "#cafe"],
+        count: "7,811 people kept their memories here.",
+        image: "memories/copenhagen/copen5.jpg"
+      },
+      {
+        name: "Nørrebro",
+        native: "Nørrebro",
+        address: "Nørrebro,\nCopenhagen, Denmark",
+        tags: ["#neighbourhood", "#multicultural", "#cafe"],
+        count: "7,811 people kept their memories here.",
+        image: "memories/copenhagen/copen6.jpg"
+      },
+      {
+        name: "Nørrebro",
+        native: "Nørrebro",
+        address: "Nørrebro,\nCopenhagen, Denmark",
+        tags: ["#neighbourhood", "#multicultural", "#cafe"],
+        count: "7,811 people kept their memories here.",
+        image: "memories/copenhagen/copen7.jpg"
+      },
+      {
+        name: "Nørrebro",
+        native: "Nørrebro",
+        address: "Nørrebro,\nCopenhagen, Denmark",
+        tags: ["#neighbourhood", "#multicultural", "#cafe"],
+        count: "7,811 people kept their memories here.",
+        image: "memories/copenhagen/copen9.jpg"
+      },
+      {
+        name: "Designmuseum Danmark",
+        native: "Designmuseum",
+        address: "Bredgade 68,\n1260 Copenhagen,\nDenmark",
+        tags: ["#design", "#museum", "#danish"],
+        count: "3,190 people kept their memories here.",
+        image: "memories/copenhagen/copen10.jpg"
+      }
+    ]
+  }
+];
+
+// ── SEOUL TAG DATA ────────────────────────────────────────────────────────
+const SEOUL_TAGS = [
+  { tag: "#food",          images: ["memories/seoul/food/food1.jpg", "memories/seoul/food/food2.jpg", "memories/seoul/food/food3.jpg", "memories/seoul/food/food4.jpg", "memories/seoul/food/food5.jpg", "memories/seoul/food/food6.jpg", "memories/seoul/food/food7.jpg", "memories/seoul/food/food8.jpg", "memories/seoul/food/food9.jpg", "memories/seoul/food/food10.jpg"]},
+  { tag: "#fashion",       images: ["memories/seoul/fashion/fashion1.jpg", "memories/seoul/fashion/fashion2.jpg", "memories/seoul/fashion/fashion3.jpg", "memories/seoul/fashion/fashion4.jpg", "memories/seoul/fashion/fashion5.jpg", "memories/seoul/fashion/fashion6.jpg", "memories/seoul/fashion/fashion7.jpg", "memories/seoul/fashion/fashion8.jpg", "memories/seoul/fashion/fashion9.jpg"] },
+  { tag: "#art",           images: ["memories/seoul/art/art1.jpg", "memories/seoul/art/art2.jpg", "memories/seoul/art/art3.jpg", "memories/seoul/art/art4.jpg", "memories/seoul/art/art5.jpg", "memories/seoul/art/art6.jpg", "memories/seoul/art/art7.jpg", "memories/seoul/art/art8.jpg", "memories/seoul/art/art9.jpg"] },
+  { tag: "#stay",          images: ["memories/seoul/stay/stay1.jpg", "memories/seoul/stay/stay2.jpg", "memories/seoul/stay/stay3.jpg", "memories/seoul/stay/stay4.jpg", "memories/seoul/stay/stay5.jpg", "memories/seoul/stay/stay6.jpg", "memories/seoul/stay/stay7.jpg", "memories/seoul/stay/stay8.jpg", "memories/seoul/stay/stay9.jpg"] },
+  { tag: "#mustgo",        images: ["memories/seoul/mustgo/mg1.jpg", "memories/seoul/mustgo/mg2.jpg", "memories/seoul/mustgo/mg3.jpg", "memories/seoul/mustgo/mg4.jpg", "memories/seoul/mustgo/mg5.jpg", "memories/seoul/mustgo/mg6.jpg", "memories/seoul/mustgo/mg7.jpg", "memories/seoul/mustgo/mg8.jpg"] },
+  { tag: "#secretcorners", images: ["memories/seoul/sc/sc1.jpg", "memories/seoul/sc/sc2.jpg", "memories/seoul/sc/sc3.jpg", "memories/seoul/sc/sc4.jpg", "memories/seoul/sc/sc5.jpg", "memories/seoul/sc/sc6.jpg"] },
+  { tag: "#dessert",        images: ["memories/seoul/dessert/dessert1.jpg", "memories/seoul/dessert/dessert2.jpg", "memories/seoul/dessert/dessert3.jpg", "memories/seoul/dessert/dessert4.jpg", "memories/seoul/dessert/dessert5.jpg", "memories/seoul/dessert/dessert6.jpg", "memories/seoul/dessert/dessert7.jpg", "memories/seoul/dessert/dessert8.jpg"] },
+  { tag: "#cafe",          images: ["memories/seoul/cafe/cafe1.jpg", "memories/seoul/cafe/cafe2.jpg", "memories/seoul/cafe/cafe3.jpg", "memories/seoul/cafe/cafe4.jpg", "memories/seoul/cafe/cafe5.jpg", "memories/seoul/cafe/cafe6.jpg", "memories/seoul/cafe/cafe7.jpg", "memories/seoul/cafe/cafe8.jpg", "memories/seoul/cafe/cafe9.jpg", "memories/seoul/cafe/cafe10.jpg"] },
+  { tag: "#tea",           images: ["memories/seoul/tea/tea1.jpg", "memories/seoul/tea/tea2.jpg", "memories/seoul/tea/tea3.jpg", "memories/seoul/tea/tea4.jpg", "memories/seoul/tea/tea5.jpg", "memories/seoul/tea/tea6.jpg"] },
+];
+
+// ── BUILD CITY ROWS ───────────────────────────────────────────────────────
+function buildCityList() {
+  const list = document.getElementById('cityList');
+  list.innerHTML = '';
+
+  CITIES.forEach(city => {
+    const row = document.createElement('div');
+    row.className = 'city-row';
+
+    const nameEl = document.createElement('div');
+    nameEl.className = 'city-name';
+    nameEl.textContent = city.name;
+
+    // Seoul is clickable
+    if (city.name === 'Seoul') {
+      nameEl.style.cursor = 'pointer';
+      nameEl.addEventListener('click', () => showSeoulPage());
+    }
+
+    const strip = document.createElement('div');
+    strip.className = 'image-strip';
+
+    city.places.forEach(place => {
+      const thumb = document.createElement('div');
+      thumb.className = 'place-thumb';
+
+      if (place.image) {
+        const img = document.createElement('img');
+        img.src = place.image;
+        img.alt = place.name;
+        img.loading = 'lazy';
+        thumb.appendChild(img);
+      } else {
+        const ph = document.createElement('div');
+        ph.className = 'ph';
+        ph.textContent = place.name;
+        thumb.appendChild(ph);
+      }
+
+      thumb.addEventListener('click', () => openPopup(place));
+      strip.appendChild(thumb);
+    });
+
+    row.appendChild(nameEl);
+    row.appendChild(strip);
+    list.appendChild(row);
+  });
+}
+
+// ── BUILD SEOUL TAG LIST ──────────────────────────────────────────────────
+function buildTagList() {
+  const list = document.getElementById('seoulTagList');
+  list.innerHTML = '';
+
+  SEOUL_TAGS.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'tag-row';
+
+    const tagEl = document.createElement('div');
+    tagEl.className = 'tag-name';
+    tagEl.textContent = item.tag;
+
+    const strip = document.createElement('div');
+    strip.className = 'tag-strip';
+
+    item.images.forEach((imgSrc, i) => {
+      const thumb = document.createElement('div');
+      thumb.className = 'tag-thumb';
+
+      if (imgSrc) {
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.alt = item.tag;
+        img.loading = 'lazy';
+        thumb.appendChild(img);
+      } else {
+        const ph = document.createElement('div');
+        ph.className = 'ph';
+        ph.textContent = item.tag;
+        thumb.appendChild(ph);
+      }
+
+      strip.appendChild(thumb);
+    });
+
+    row.appendChild(tagEl);
+    row.appendChild(strip);
+    list.appendChild(row);
+  });
+}
+
+// ── PAGE SWITCHING ────────────────────────────────────────────────────────
+function fadeInPage(el) {
+  el.classList.remove('fade-in');
+  void el.offsetWidth; // force reflow
+  el.classList.add('fade-in');
+}
+
+function showSeoulPage() {
+  document.getElementById('page').style.display = 'none';
+  document.getElementById('seoulPage').classList.add('active');
+  fadeInPage(document.getElementById('seoulPage'));
+  sessionStorage.setItem('currentPage', 'seoul');
+}
+
+function showExplorePage() {
+  document.getElementById('seoulPage').classList.remove('active');
+  document.getElementById('archivePage').classList.remove('active');
+  document.getElementById('tokyoArchivePage').classList.remove('active');
+  document.getElementById('page').style.display = 'block';
+  fadeInPage(document.getElementById('page'));
+  sessionStorage.setItem('currentPage', 'explore');
+}
+
+// ── POPUP ─────────────────────────────────────────────────────────────────
+function openPopup(place) {
+  document.querySelector('.popup-actions').style.display = 'flex';
+  const overlay = document.getElementById('overlay');
+  const imgWrap = document.getElementById('popupImage');
+  document.getElementById('popupName').textContent = place.name;
+  document.getElementById('popupNative').textContent = place.native;
+  document.getElementById('popupAddress').textContent = place.address;
+  document.getElementById('popupCount').textContent = place.count;
+
+  const tagsEl = document.getElementById('popupTags');
+  tagsEl.innerHTML = '';
+  place.tags.forEach(tag => {
+    const span = document.createElement('span');
+    span.textContent = tag;
+    tagsEl.appendChild(span);
+  });
+
+  imgWrap.innerHTML = '';
+  if (place.image) {
+    const img = document.createElement('img');
+    img.src = place.image;
+    img.alt = place.name;
+    imgWrap.appendChild(img);
+  } else {
+    const ph = document.createElement('div');
+    ph.className = 'ph-large';
+    ph.textContent = '[ Image placeholder ]';
+    imgWrap.appendChild(ph);
+  }
+
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePopup() {
+  document.getElementById('overlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function openPopupNoActions(place) {
+  openPopup(place);
+  document.querySelector('.popup-actions').style.display = 'none';
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+document.getElementById('popupClose').addEventListener('click', closePopup);
+document.getElementById('overlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('overlay')) closePopup();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closePopup();
+});
+
+// ── NAV TABS ──────────────────────────────────────────────────────────────
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    if (tab.dataset.tab === 'explore') {
+      showExplorePage();
+    } else if (tab.dataset.tab === 'archive') {
+      showArchivePage();
+    }
+  });
+});
+
+// ── ARCHIVE DATA ──────────────────────────────────────────────────────────
+// Add more cities here. image: "" → fill in your image path.
+const ARCHIVE_CITIES = [
+  { name: "Kyoto",      image: "archive/kyoto.jpg" },
+  { name: "Osaka",      image: "archive/osaka.jpg" },
+  { name: "Sapporo",    image: "archive/sapporo.jpg" },
+  { name: "Otaru",      image: "archive/otaru.jpg" },
+  { name: "Hakodate",   image: "archive/hakodate.jpg" },
+  { name: "Tokyo",      image: "archive/tokyo.jpg" },
+  { name: "Inverness",  image: "archive/inverness.png" },
+  { name: "Interlaken", image: "archive/interlaken.jpg" },
+  { name: "Amsterdam", image: "archive/amsterdam.jpg" },
+  { name: "London", image: "archive/london.jpg" },
+];
+
+// ── BUILD ARCHIVE GRID ────────────────────────────────────────────────────
+function buildArchiveGrid() {
+  const grid = document.getElementById('archiveGrid');
+  grid.innerHTML = '';
+
+  // Add cell (top-left)
+  const addCell = document.createElement('div');
+  addCell.className = 'archive-cell-add';
+  addCell.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v16m-8-8h16" stroke-linecap="round"/></svg>`;
+  addCell.addEventListener('click', openUpload);
+  grid.appendChild(addCell);
+
+  // City cells
+  ARCHIVE_CITIES.forEach(city => {
+    const cell = document.createElement('div');
+    cell.className = 'archive-cell';
+
+    if (city.image) {
+      const img = document.createElement('img');
+      img.src = city.image;
+      img.alt = city.name;
+      img.loading = 'lazy';
+      cell.appendChild(img);
+    } else {
+      // placeholder with dark bg
+      cell.style.background = '#555';
+    }
+
+    const label = document.createElement('div');
+    label.className = 'archive-cell-label';
+    label.textContent = city.name;
+    cell.appendChild(label);
+
+    // Tokyo is clickable → Archive Tokyo subpage
+    if (city.name === 'Tokyo') {
+      cell.style.cursor = 'pointer';
+      cell.addEventListener('click', () => showTokyoArchivePage());
+    }
+
+    grid.appendChild(cell);
+  });
+}
+
+// ── ARCHIVE PAGE SWITCH ───────────────────────────────────────────────────
+function showArchivePage() {
+  document.getElementById('page').style.display = 'none';
+  document.getElementById('seoulPage').classList.remove('active');
+  document.getElementById('tokyoArchivePage').classList.remove('active');
+  document.getElementById('archivePage').classList.add('active');
+  fadeInPage(document.getElementById('archivePage'));
+  sessionStorage.setItem('currentPage', 'archive');
+}
+
+function showTokyoArchivePage() {
+  document.getElementById('archivePage').classList.remove('active');
+  document.getElementById('tokyoArchivePage').classList.add('active');
+  fadeInPage(document.getElementById('tokyoArchivePage'));
+  sessionStorage.setItem('currentPage', 'tokyoArchive');
+}
+
+// ── TOKYO ARCHIVE TAG DATA ────────────────────────────────────────────────
+// Add more tags or images as needed
+const TOKYO_ARCHIVE_TAGS = [
+  { tag: "#mustgo", places: [
+    { name: "Grill Grand", native: "", address: "3 Chome-24-6 Asakusa, Taito City, Tokyo 111-0032, Japan", tags: ["#food", "#mustgo", "#brunch"], count: "", image: "memories/tokyo/food/food6.png" } ,
+  ]},
+  { tag: "#concert", places: [
+    { name: "", native: "", address: "", tags: ["#concert"], count: "", image: "memories/tokyo/concert/concert1.jpg" }, { name: "", native: "", address: "", tags: ["#concert"], count: "", image: "memories/tokyo/concert/concert2.jpg" }
+  ]},
+  { tag: "#shops", places: [
+    { name: "", native: "", address: "", tags: ["#shops"], count: "", image: "memories/tokyo/shops/shops1.jpg" }, { name: "", native: "", address: "", tags: ["#shops"], count: "", image: "memories/tokyo/shops/shops2.jpg" }, { name: "", native: "", address: "", tags: ["#shops"], count: "", image: "memories/tokyo/shops/shops3.jpg" }
+  ]},
+  { tag: "#xmas2025", places: [
+    { name: "", native: "", address: "", tags: ["#xmas2025"], count: "", image: "memories/tokyo/xmas/xmas1.jpg" }, { name: "", native: "", address: "", tags: ["#xmas2025"], count: "", image: "memories/tokyo/xmas/xmas2.jpg" }, { name: "", native: "", address: "", tags: ["#xmas2025"], count: "", image: "memories/tokyo/xmas/xmas3.jpg" }, { name: "", native: "", address: "", tags: ["#xmas2025"], count: "", image: "memories/tokyo/xmas/xmas4.jpg" }, { name: "", native: "", address: "", tags: ["#xmas2025"], count: "", image: "memories/tokyo/xmas/xmas5.jpg" }, { name: "", native: "", address: "", tags: ["#xmas2025"], count: "", image: "memories/tokyo/xmas/xmas6.jpg" }, { name: "", native: "", address: "", tags: ["#xmas2025"], count: "", image: "memories/tokyo/xmas/xmas7.jpg" }
+  ]},
+  { tag: "#food", places: [
+     { name: "Food1", native: "", address: "", tags: ["#mustgo"], count: "", image: "memories/tokyo/food/food1.jpg" } , { name: "Food2", native: "", address: "", tags: ["#mustgo"], count: "", image: "memories/tokyo/food/food2.jpg" }, { name: "Food3", native: "", address: "", tags: ["#mustgo"], count: "", image: "memories/tokyo/food/food3.jpg" } , { name: "Food4", native: "", address: "", tags: ["#mustgo"], count: "", image: "memories/tokyo/food/food4.jpg" } , { name: "Food1", native: "", address: "", tags: ["#mustgo"], count: "", image: "memories/tokyo/food/food5.jpg" } , { name: "Grill Grand", native: "", address: "3 Chome-24-6 Asakusa, Taito City, Tokyo 111-0032, Japan", tags: ["#food", "#mustgo", "#brunch"], count: "", image: "memories/tokyo/food/food6.png" } ,
+  ]},
+  { tag: "#cafe", places: [
+    { name: "", native: "", address: "", tags: ["#cafe"], count: "", image: "memories/tokyo/cafe/cafe1.jpg" }, { name: "", native: "", address: "", tags: ["#cafe"], count: "", image: "memories/tokyo/cafe/cafe2.jpg" }, { name: "", native: "", address: "", tags: ["#cafe"], count: "", image: "memories/tokyo/cafe/cafe3.jpg" }, { name: "", native: "", address: "", tags: ["#cafe"], count: "", image: "memories/tokyo/cafe/cafe4.jpg" }
+  ]},
+  { tag: "#art", places: [
+    { name: "", native: "", address: "", tags: ["#art"], count: "", image: "memories/tokyo/art/art1.jpg" }, { name: "", native: "", address: "", tags: ["#art"], count: "", image: "memories/tokyo/art/art2.jpg" }, { name: "", native: "", address: "", tags: ["#art"], count: "", image: "memories/tokyo/art/art3.jpg" }, { name: "", native: "", address: "", tags: ["#art"], count: "", image: "memories/tokyo/art/art4.jpg" }
+  ]},
+  { tag: "#stay", places: [
+    { name: "", native: "", address: "", tags: ["#stay"], count: "", image: "memories/tokyo/stay/stay.jpg" }
+  ]},
+];
+
+function buildTokyoTagList() {
+  const list = document.getElementById('tokyoTagList');
+  list.innerHTML = '';
+
+  TOKYO_ARCHIVE_TAGS.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'tag-row';
+
+    const tagEl = document.createElement('div');
+    tagEl.className = 'tag-name';
+    tagEl.textContent = item.tag;
+
+    const strip = document.createElement('div');
+    strip.className = 'tag-strip';
+
+    item.places.forEach(place => {
+      const thumb = document.createElement('div');
+      thumb.className = 'tag-thumb';
+
+      if (place.image) {
+        const img = document.createElement('img');
+        img.src = place.image;
+        img.alt = place.name || item.tag;
+        img.loading = 'lazy';
+        thumb.appendChild(img);
+      } else {
+        const ph = document.createElement('div');
+        ph.className = 'ph';
+        ph.textContent = place.name || item.tag;
+        thumb.appendChild(ph);
+      }
+
+      thumb.addEventListener('click', () => openPopupNoActions(place));
+      strip.appendChild(thumb);
+    });
+
+    row.appendChild(tagEl);
+    row.appendChild(strip);
+    list.appendChild(row);
+  });
+}
+
+// ── TOKYO WISHLIST DATA ───────────────────────────────────────────────────
+const TOKYO_WISHLIST_TAGS = [
+  { tag: "#ginza", places: [
+    { name: "", native: "", address: "", tags: ["#ginza"], count: "", image: "memories/tokyo/ginza/ginza1.jpg" }, { name: "", native: "", address: "", tags: ["#ginza"], count: "", image: "memories/tokyo/ginza/ginza2.jpg" }, { name: "", native: "", address: "", tags: ["#ginza"], count: "", image: "memories/tokyo/ginza/ginza3.jpg" }, { name: "", native: "", address: "", tags: ["#ginza"], count: "", image: "memories/tokyo/ginza/ginza4.jpg" }, { name: "", native: "", address: "", tags: ["#ginza"], count: "", image: "memories/tokyo/ginza/ginza5.jpg" }, { name: "", native: "", address: "", tags: ["#ginza"], count: "", image: "memories/tokyo/ginza/ginza6.jpg" }, { name: "", native: "", address: "", tags: ["#ginza"], count: "", image: "memories/tokyo/ginza/ginza7.jpg" }
+  ]},
+  { tag: "#asakusa", places: [
+    { name: "", native: "", address: "", tags: ["#asakusa"], count: "", image: "memories/tokyo/asakusa/asakusa1.jpg" }, { name: "", native: "", address: "", tags: ["#asakusa"], count: "", image: "memories/tokyo/asakusa/asakusa2.jpg" }, { name: "", native: "", address: "", tags: ["#asakusa"], count: "", image: "memories/tokyo/asakusa/asakusa3.jpg" }, { name: "", native: "", address: "", tags: ["#asakusa"], count: "", image: "memories/tokyo/asakusa/asakusa4.jpg" }, { name: "", native: "", address: "", tags: ["#asakusa"], count: "", image: "memories/tokyo/asakusa/asakusa5.jpg" }, { name: "", native: "", address: "", tags: ["#asakusa"], count: "", image: "memories/tokyo/asakusa/asakusa6.jpg" }
+  ]},
+  { tag: "#shinjuku", places: [
+    { name: "", native: "", address: "", tags: ["#shinjuku"], count: "", image: "memories/tokyo/shinjuku/shinjuku1.jpg" }, { name: "", native: "", address: "", tags: ["#shinjuku"], count: "", image: "memories/tokyo/shinjuku/shinjuku2.jpg" }, { name: "", native: "", address: "", tags: ["#shinjuku"], count: "", image: "memories/tokyo/shinjuku/shinjuku3.jpg" }, { name: "", native: "", address: "", tags: ["#shinjuku"], count: "", image: "memories/tokyo/shinjuku/shinjuku4.jpg" }, { name: "", native: "", address: "", tags: ["#shinjuku"], count: "", image: "memories/tokyo/shinjuku/shinjuku5.jpg" }
+  ]},
+];
+
+function buildTokyoWishlist() {
+  const list = document.getElementById('tokyoWishlistList');
+  list.innerHTML = '';
+
+  TOKYO_WISHLIST_TAGS.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'tag-row';
+
+    const tagEl = document.createElement('div');
+    tagEl.className = 'tag-name';
+    tagEl.textContent = item.tag;
+
+    const strip = document.createElement('div');
+    strip.className = 'tag-strip';
+
+    item.places.forEach(place => {
+      const thumb = document.createElement('div');
+      thumb.className = 'tag-thumb';
+
+      if (place.image) {
+        const img = document.createElement('img');
+        img.src = place.image;
+        img.alt = place.name || item.tag;
+        img.loading = 'lazy';
+        thumb.appendChild(img);
+      } else {
+        const ph = document.createElement('div');
+        ph.className = 'ph';
+        ph.textContent = place.name || item.tag;
+        thumb.appendChild(ph);
+      }
+
+      thumb.addEventListener('click', () => openPopupNoActions(place));
+      strip.appendChild(thumb);
+    });
+
+    row.appendChild(tagEl);
+    row.appendChild(strip);
+    list.appendChild(row);
+  });
+}
+
+// ── UPLOAD MODAL ──────────────────────────────────────────────────────────
+function openUpload() {
+  document.getElementById('uploadOverlay').classList.add('active');
+}
+
+function closeUpload() {
+  document.getElementById('uploadOverlay').classList.remove('active');
+}
+
+// Image preview
+document.getElementById('uploadFileInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  const preview = document.getElementById('uploadPreview');
+  preview.src = url;
+  preview.style.display = 'block';
+  document.getElementById('uploadIcon').style.display = 'none';
+});
+
+// Keep button
+document.getElementById('uploadKeepBtn').addEventListener('click', () => {
+  closeUpload();
+  const kept = document.getElementById('keptOverlay');
+  kept.classList.add('active');
+  setTimeout(() => kept.classList.remove('active'), 3500);
+});
+
+// Close upload on backdrop click
+document.getElementById('uploadOverlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('uploadOverlay')) closeUpload();
+});
+
+// Close kept on click
+document.getElementById('keptOverlay').addEventListener('click', () => {
+  document.getElementById('keptOverlay').classList.remove('active');
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+buildCityList();
+buildTagList();
+buildArchiveGrid();
+buildTokyoTagList();
+buildTokyoWishlist();
+
+// Restore last visited page
+const savedPage = sessionStorage.getItem('currentPage');
+if (savedPage === 'seoul') {
+  showSeoulPage();
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('[data-tab="explore"]').classList.add('active');
+} else if (savedPage === 'archive') {
+  showArchivePage();
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('[data-tab="archive"]').classList.add('active');
+} else if (savedPage === 'tokyoArchive') {
+  showArchivePage();
+  showTokyoArchivePage();
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('[data-tab="archive"]').classList.add('active');
+}
+
+// Dismiss loading screen after images begin loading
+window.addEventListener('load', () => {
+  const screen = document.getElementById('loadingScreen');
+  screen.classList.add('fade-out');
+  setTimeout(() => screen.style.display = 'none', 500);
+});
+
+// Fallback — dismiss after 2.5s even if load event is slow
+setTimeout(() => {
+  const screen = document.getElementById('loadingScreen');
+  if (screen && !screen.classList.contains('fade-out')) {
+    screen.classList.add('fade-out');
+    setTimeout(() => screen.style.display = 'none', 500);
+  }
+}, 2500);
+</script>
 </body>
 </html>
