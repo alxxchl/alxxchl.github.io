@@ -1076,9 +1076,125 @@
       flex-shrink: 0;
     }
   }
+  /* ── LOGIN PAGE ── */
+  .login-page {
+    position: fixed;
+    inset: 0;
+    background: var(--lime);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease;
+  }
+
+  .login-page.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .login-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .login-brand {
+    position: absolute;
+    left: 48px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .login-brand img {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .login-brand-name {
+    font-size: 28px;
+    font-family: var(--font-medium);
+    font-weight: normal;
+    color: #000;
+    letter-spacing: -0.02em;
+  }
+
+  .login-tagline {
+    position: absolute;
+    right: 48px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 28px;
+    font-family: var(--font-light);
+    font-weight: 300;
+    color: #000;
+    letter-spacing: -0.02em;
+  }
+
+  .login-actions {
+    position: absolute;
+    bottom: 48px;
+    right: 48px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .login-btn {
+    padding: 16px 40px;
+    font-family: var(--font-medium);
+    font-size: 16px;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: opacity 0.2s;
+  }
+
+  .login-btn:hover { opacity: 0.85; }
+
+  .login-btn-in {
+    background: var(--green);
+    color: #fff;
+  }
+
+  .login-btn-up {
+    background: var(--green);
+    color: #fff;
+  }
+
+  @media (max-width: 768px) {
+    .login-brand { left: 20px; }
+    .login-brand img { width: 72px; }
+    .login-brand-name { font-size: 18px; }
+    .login-tagline { font-size: 16px; right: 20px; left: 20px; top: auto; bottom: 140px; transform: none; text-align: left; }
+    .login-actions { right: 20px; bottom: 36px; }
+    .login-btn { padding: 14px 28px; font-size: 14px; }
+  }
 </style>
 </head>
 <body>
+
+<!-- LOGIN PAGE -->
+<div class="login-page" id="loginPage">
+  <div class="login-inner">
+    <div class="login-brand">
+      <img src="logo.png" alt="Keeper">
+      <span class="login-brand-name">KEEPER</span>
+    </div>
+    <div class="login-tagline">keep the places that kept you</div>
+    <div class="login-actions">
+      <button class="login-btn login-btn-in" id="loginBtn">Log In</button>
+      <button class="login-btn login-btn-up" id="signupBtn">Sign Up</button>
+    </div>
+  </div>
+</div>
 
 <!-- LOADING SCREEN -->
 <div class="loading-screen" id="loadingScreen">
@@ -2114,6 +2230,16 @@ document.getElementById('uploadOverlay').addEventListener('click', (e) => {
 document.getElementById('keptOverlay').addEventListener('click', () => {
   document.getElementById('keptOverlay').classList.remove('active');
 });
+
+// ── LOGIN PAGE ────────────────────────────────────────────────────────────
+function dismissLogin() {
+  const login = document.getElementById('loginPage');
+  login.classList.add('fade-out');
+  setTimeout(() => login.style.display = 'none', 500);
+}
+
+document.getElementById('loginBtn').addEventListener('click', dismissLogin);
+document.getElementById('signupBtn').addEventListener('click', dismissLogin);
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 buildCityList();
